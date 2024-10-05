@@ -29,7 +29,7 @@ export const getEntries = {
     },
     deleteUser:async(_id: string): Promise<{ deletedCount: number }> =>{
         try {
-          //await activityService.updateActivitiesForDeletedUser(_id);
+          
     
           // Luego, eliminar al usuario
           const query = { _id: _id };

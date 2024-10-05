@@ -5,8 +5,6 @@ import * as propertiesServices from '../property/service';
 
 export class propertyController {
 
-    //private activity_service: ActivityService = new ActivityService();
-    //private user_service: UserService = new UserService();
 
     public async createProperty(req: Request, res: Response) {
         try{
@@ -113,8 +111,5 @@ export class propertyController {
         }
     }
 
-    /* public async getAll(req: Request, res: Response) {
-        const activity_data = await this.activity_service.getAll({});
-        return res.status(200).json(activity_data);    
-    } */
+    
 } 

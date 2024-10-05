@@ -1,7 +1,7 @@
 import express from 'express';
 import {propertyController} from '../controller/property';
 
-//import toNewUser from '../extras/utils'
+
 
 const router = express.Router()
 const property_controller: propertyController = new propertyController();
