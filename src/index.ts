@@ -1,17 +1,16 @@
 import express,{RequestHandler} from 'express'
 import cors from 'cors'
 import userRouter from './routes/user'
-import experienciasRouter from './routes/experiencias'
+import propertyRouter from './routes/property'
 import { run } from './database/mongo_conn'
 
-const app = express()
-app.use(express.json())
+const app = express();
+app.use(express.json());
 run();
 
 app.use(cors());
 app.use(express.json() as RequestHandler);
-
-const PORT = 3000;
+const PORT = 3001;
 
 app.get('/ping', (_req , res) => {
     console.log('ping recibido correctamente')
@@ -19,7 +18,7 @@ app.get('/ping', (_req , res) => {
 })
 
 app.use('/user',userRouter)
-app.use('/experiencias',experienciasRouter)
+app.use('/property',propertyRouter)
 
 app.listen(PORT, () => {
     console.log('el servidor esta escuchando en el puerto '+ PORT)

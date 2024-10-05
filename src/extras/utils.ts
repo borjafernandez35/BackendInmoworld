@@ -1,4 +1,4 @@
-import { newUserInfo } from "../user/model"
+import { IUser } from "../user/model"
 
 const parseName = (nameFromRequest:any):string =>{
     if(!isString(nameFromRequest)){
@@ -24,24 +24,24 @@ const parsePassword = (passwordFromRequest:any):string =>{
     return passwordFromRequest
 }
 
-const parseComment = (commentFromRequest:any):string =>{
+/* const parseComment = (commentFromRequest:any):string =>{
     if(!isString(commentFromRequest)){
         throw new Error ('Incorrect or missing comment')
     }
     
     return commentFromRequest
-}
+} */
 
 const isString = (string:any):boolean => {
     return typeof string == 'string' || string instanceof String
 }
-const toNewUser = (object:any): newUserInfo => {
-    const newUser: newUserInfo = {
+const toNewUser = (object:any): IUser => {
+    const newUser: IUser = {
         name: parseName(object.name),
-        mail: parseMail(object.mail),
+        email: parseMail(object.email),
         password: parsePassword(object.password),
-        comment: parseComment(object.comment),
-        experince: []
+        //comment: parseComment(object.comment),
+        //experince: []
     }
     return newUser
 }

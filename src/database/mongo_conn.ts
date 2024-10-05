@@ -4,7 +4,7 @@ import { connect, connection } from 'mongoose';
 
 //const connectionString = 'mongodb://localhost:27017/Prueba_1'
 export async function run() {
-    await connect('mongodb://localhost:27017/Prueba_1')
+    await connect('mongodb://localhost:27017/InmoWorld')
     .then(()=>{
         console.log('Database connected!!')
     }) .catch((err)=>{

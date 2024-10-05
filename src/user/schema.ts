@@ -1,13 +1,14 @@
-import {model, Schema } from "mongoose";
-import { usersInterface } from './model'
+import mongoose, { Schema } from "mongoose";
+//import { IUser } from './model'
 
-export const usersSchema = new Schema<usersInterface>({
-    id: Number,
-    name: String,
-    mail: String,
-    experince: [{type: Schema.Types.ObjectId, ref:'experince'}],
-    password: String,
-    comment: String
+export const schema = new Schema({
+    name: {type: String, required: true},
+    email: {type: String, required: true},
+    //birthday: {type: String, required: false},
+    //avatar:{type: String, required: false},
+    property: [{type: Schema.Types.ObjectId,required: false, ref:'property'}],
+    password: {type: String, required: true},
+    //comment: {type: String, required: false}
 })
 
-export const usersofDB = model<usersInterface>('user',usersSchema)
+export default mongoose.model('user',schema)

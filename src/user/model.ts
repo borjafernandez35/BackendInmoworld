@@ -1,13 +1,15 @@
-import { ObjectId } from "mongoose"
+import mongoose, { ObjectId } from "mongoose"
 
 
-export interface usersInterface{
-    id: number,
+export interface IUser{
+   // _id?: mongoose.Types.ObjectId;
     name: string,
-    mail: string,
+    email: string,
+    //birthday?: Date,
     password: string,
-    comment: string,
-    experince: ObjectId[]
+    //avatar?:string,
+    //comment: string,
+    property?: ObjectId[]
 }
-export type UsersInterfacePublicInfo = Pick<usersInterface, 'id' | 'name' | 'comment'>
-export type newUserInfo = Omit<usersInterface,'id'>
+//export type UsersInterfacePublicInfo = Pick<usersInterface, 'id' | 'name' | 'comment'>
+//export type newUserInfo = Omit<usersInterface>
