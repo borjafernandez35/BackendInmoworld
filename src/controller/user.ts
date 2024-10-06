@@ -3,8 +3,6 @@ import { IUser } from '../user/model';
 import * as userServices from '../user/service';
 
 export class userController {
-
-
     public async createUser(req: Request, res: Response) {
 
       try{
@@ -12,7 +10,7 @@ export class userController {
             const user_params: IUser = {
                 name: req.body.name,
                 email: req.body.email,
-                password :req.body.password,
+                password: req.body.password
                 //active: true
             };
             const user_data = await userServices.getEntries.create(user_params);
@@ -83,7 +81,7 @@ export class userController {
         const user_params: IUser = {
           name: req.body.name || user_data.name,
           email: req.body.email || user_data.email,         
-          password: req.body.password || user_data.password,
+          password: req.body.password || user_data.password
           
         };
         await userServices.getEntries.updateUser(user_params, user_filter);
