@@ -8,6 +8,13 @@ export const getEntries = {
     findById: async(id: String) => {
         return await review.findById(id)
     },
+    filterReview: async(query: any): Promise<IReview | null>=> {
+        try {
+            return await review.findOne(query);
+        } catch (error) {
+            throw error;
+        }
+    },
     create: async(entry: object) => {
         console.log(entry)
         return await review.create(entry)
@@ -24,7 +31,7 @@ export const getEntries = {
         }
     },
     delete: async(id: String) => {
-        return await review.findOneAndDelete(id)
+        return await review.findByIdAndDelete(id)
     },
     deleteReview: async(id: String): Promise<{ deletedCount: number }> => {
         try {

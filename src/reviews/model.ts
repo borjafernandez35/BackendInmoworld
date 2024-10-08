@@ -1,10 +1,9 @@
-import mongoose, {ObjectID} from "mongoose"
-import IUser from "../user/model.ts"
-import IProperty from "../property/model.ts"
+import { ObjectId} from "mongoose"
+
 
 export interface IReview {
     user: ObjectId,
     property: ObjectId,
-    date: string,
+    date: Date,
     description: string
 }

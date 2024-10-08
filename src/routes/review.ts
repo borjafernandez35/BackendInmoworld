@@ -13,15 +13,15 @@ router.get('/:id', async(req, res) => {
 })
 
 router.post('/', async(req, res) => {
-    review_controller.createReveiw(req, res);
+    review_controller.createReview(req, res);
 })
 
 router.put('/:id', async (req, res) => {
-    reveiw_controller.updateReview(req, res);
+    review_controller.updateReview(req, res);
 })
 
 router.delete('/:id', async(req, res) => {
-    review_controller.deleteReveiw(req, res);
+    review_controller.deleteReview(req, res);
 })
 
 export default router

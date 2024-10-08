@@ -7,9 +7,10 @@ export class reviewController {
         try {
             if (req.body.user && req.body.property && req.body.description) {
                 const review_params: IReview = {
-                    user: req.body.user,
-                    property: req.body.property,
-                    description: req.body.description
+                  user: req.body.user,
+                  property: req.body.property,
+                  description: req.body.description,
+                  date: new Date()
                 }
                 const review_data = await reviewServices.getEntries.create(review_params)
                 return res.status(201).json({ message: 'Review created succesfully', review: review_data})
@@ -60,8 +61,10 @@ export class reviewController {
     public async updateReview(req: Request, res: Response) {
         try {
             if (req.params.id) {
-             const review_filter = { id: req.params.id }
-              const review_data = await reviewServices.getEntries.findById(req.params.id)
+             const review_filter = { _id: req.params.id }
+             console.log(review_filter);
+              const review_data = await reviewServices.getEntries.filterReview(review_filter)
+              console.log(review_data);
               if (!review_data) {
                 return res.status(400).json({ error: 'Review not found' });
               }
@@ -69,11 +72,13 @@ export class reviewController {
               const review_params: IReview = {
                 user: req.body.name || review_data.user,
                 property: req.body.property || review_data.property,
-                description: req.body.description || review_data.description
+                description: req.body.description || review_data.description,
+                date: new Date()
               }
 
               await reviewServices.getEntries.updateReview(review_params, review_filter)
               const new_review_data = await reviewServices.getEntries.findById(req.params.id)
+              console.log('update:',new_review_data);
 
               return res
                 .status(200)

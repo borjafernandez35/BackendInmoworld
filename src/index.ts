@@ -2,6 +2,7 @@ import express,{RequestHandler} from 'express'
 import cors from 'cors'
 import userRouter from './routes/user'
 import propertyRouter from './routes/property'
+import reviewRouter from './routes/review'
 import { run } from './database/mongo_conn'
 
 const app = express();
@@ -19,6 +20,7 @@ app.get('/ping', (_req , res) => {
 
 app.use('/user',userRouter)
 app.use('/property',propertyRouter)
+app.use('/review',reviewRouter)
 
 app.listen(PORT, () => {
     console.log('el servidor esta escuchando en el puerto '+ PORT)
