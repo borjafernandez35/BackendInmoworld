@@ -20,7 +20,7 @@ router.get('/:page/:limit', async(_req, res) => {
     return res.json(data);
 }) */
 
-router.post('/', async(req, res) => {
+router.post('/:id', async(req, res) => {
     property_controller.createProperty(req, res);
 })
 
