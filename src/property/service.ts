@@ -56,7 +56,7 @@ export const getEntries = {
     },
     updateProperty: async(property_params: IProperty, property_filter: any): Promise<void>=> {
         try {
-            await property.findOneAndUpdate(property_filter, property_params);
+            await property.findOneAndUpdate(property_filter, {$set: property_params }, { new: true });
         } catch (error) {
             throw error;
         }

@@ -95,10 +95,13 @@ export class propertyController {
                     //picture: req.body.picture
                     //active: true
                 };
+                const property_data = await propertiesServices.getEntries.create(property_params);
+                await propertiesServices.getEntries.addPropertyToUser(req.body.owner, property_data._id);
                 await propertiesServices.getEntries.updateProperty(property_params, property_filter);
                 //get new activity data
                 const new_activity_data = await propertiesServices.getEntries.filterProperty(property_filter);
                 // Send success response
+                
                 return res.status(200).json({ data: new_activity_data, message: 'Successful update'});
             } else {
                 // Send error response if ID parameter is missing
