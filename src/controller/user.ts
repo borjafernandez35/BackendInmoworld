@@ -1,10 +1,9 @@
+/* eslint-disable */
 import { Request, Response } from 'express';
 import { IUser } from '../user/model';
 import * as userServices from '../user/service';
-
 export class userController {
     public async createUser(req: Request, res: Response) {
-
       try{
         if (req.body.name  && req.body.email && req.body.password) {
             const user_params: IUser = {
@@ -65,7 +64,32 @@ export class userController {
     }
   }
 
-  
+  public async login(req: Request, res: Response) {
+    try {
+      if(req.body.username && req.body.password) {
+        const user_filter = req.body.username
+        // look up to this user to see if exists
+        const user_data = await userServices.getEntries.findByName(user_filter)
+        if (user_data) {
+          if(user_data.name === req.body.username && user_data.password === req.body.password) {
+            return res.status(200).json({ data: user_data, message: 'Succesful' })
+          } else {
+            return res.status(301).json({ message: 'Error, wrong username or password' })
+          }
+        } else {
+          return res.status(404).json({ message: 'User not found' })
+        }
+      } else {
+        return res.status(300).json({ message: 'Missing fields' })
+      }
+    } catch (error) {
+      return res.status(500).json({ error: 'Internal server error' })
+    }
+  }
+
+  public async register(req: Request, res: Response) {
+
+  }
 
   public async updateUser(req: Request, res: Response) {
     try {

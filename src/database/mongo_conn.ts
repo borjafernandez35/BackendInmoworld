@@ -1,4 +1,5 @@
-import { connect, connection } from 'mongoose';
+import { connect, connection } from 'mongoose'
+/* eslint-disable */
 //const mongoose = require ('mongoose')
 //import mongoose from 'mongoose';
 

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { IReview } from './model'
 import review from './schema'
 

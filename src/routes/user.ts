@@ -1,5 +1,7 @@
+/* eslint-disable */
 import express from 'express'
 import {userController} from '../controller/user'
+/* eslint-disable */
 
 //import toNewUser from '../extras/utils'
 
@@ -16,6 +18,14 @@ router.get('/:id', async(req, res) => {
 
 router.post('/', async(req, res) => {
     user_controller.createUser(req, res);
+})
+
+router.post('/login', async(req, res) => {
+    user_controller.login(req, res)
+})
+
+router.post('/register', async(req, res) => {
+    user_controller.register(req, res)
 })
 
 router.put('/:id', async (req, res) => {

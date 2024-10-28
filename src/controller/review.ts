@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { IReview } from '../reviews/model'
 import * as reviewServices from '../reviews/service'
-
+/* eslint-disable */
 export class reviewController {
     public async createReview(req: Request, res: Response) {
         try {

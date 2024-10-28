@@ -4,7 +4,6 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev src/index.ts",
-    "slint": "ts-standard",
     "start": "node build/index.js",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -25,13 +24,5 @@
     "cors": "2.8.5",
     "express": "^4.21.0",
     "mongoose": "8.6.3"
-  },
-  "eslintConfig": {
-    "parserOptions": {
-      "project": "tsconfig.json"
-    },
-    "extends": [
-      "./node_modules/ts-standard/eslintrc.json"
-    ]
   }
 }

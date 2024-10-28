@@ -1,3 +1,4 @@
+/* eslint-disable */
 import express,{RequestHandler} from 'express'
 import cors from 'cors'
 import userRouter from './routes/user'

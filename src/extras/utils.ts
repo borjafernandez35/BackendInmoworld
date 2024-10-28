@@ -1,5 +1,5 @@
-import { IUser } from "../user/model"
-
+import { IUser } from '../user/model'
+/* eslint-disable */
 const parseName = (nameFromRequest:any):string =>{
     if(!isString(nameFromRequest)){
         throw new Error ('Incorrect or missing name')

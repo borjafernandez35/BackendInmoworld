@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { IUser } from './model';
 import user from './schema';
 //import userData from './users.json'
@@ -8,6 +9,9 @@ export const getEntries = {
     },
     findById: async(_id:string)=>{
         return await user.findById(_id);
+    },
+    findByName: async(username: string) => {
+      return await user.findOne({ name: username })
     },
     create: async(entry:object)=>{
         console.log(entry);

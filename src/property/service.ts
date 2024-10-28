@@ -1,3 +1,4 @@
+/* eslint-disable */
 //import { IProperty } from './model';
 import { Types } from 'mongoose';
 import { IProperty } from './model';

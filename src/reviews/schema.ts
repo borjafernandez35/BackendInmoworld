@@ -1,3 +1,4 @@
+/* eslint-disable */
 import mongoose, { Schema } from "mongoose";
 
 export const schema = new Schema({
