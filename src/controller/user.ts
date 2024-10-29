@@ -85,13 +85,13 @@ export class userController {
           if(user_data.name === req.body.username && user_data.password === req.body.password) {
             return res.status(200).json({ data: user_data, message: 'Succesful' })
           } else {
-            return res.status(301).json({ message: 'Error, wrong username or password' })
+            return res.status(401).json({ message: 'Error, wrong username or password' })
           }
         } else {
           return res.status(404).json({ message: 'User not found' })
         }
       } else {
-        return res.status(300).json({ message: 'Missing fields' })
+        return res.status(400).json({ message: 'Missing fields' })
       }
     } catch (error) {
       return res.status(500).json({ error: 'Internal server error' })
@@ -99,7 +99,22 @@ export class userController {
   }
 
   public async register(req: Request, res: Response) {
-
+    try{
+      if (req.body.name  && req.body.email && req.body.password) {
+          const user_params: IUser = {
+              name: req.body.name,
+              email: req.body.email,
+              password: req.body.password
+              //active: true
+          };
+          const user_data = await userServices.getEntries.create(user_params);
+          return res.status(201).json({ message: 'User registered successfully', user: user_data });
+      }else{            
+          return res.status(400).json({ error: 'Missing fields' });
+      }
+    }catch(error){
+      return res.status(500).json({ error: 'Internal server error' });
+    }
   }
 
   public async updateUser(req: Request, res: Response) {
@@ -110,7 +125,7 @@ export class userController {
         const user_data = await userServices.getEntries.findById(req.params.id)
         if (!user_data) {
           // Send failure response if user not found
-          return res.status(400).json({ error: 'User not found' });
+          return res.status(404).json({ error: 'User not found' });
         }
 
         const user_params: IUser = {
