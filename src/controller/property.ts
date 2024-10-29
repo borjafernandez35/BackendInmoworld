@@ -55,6 +55,7 @@ export class propertyController {
             let total=property_data.length;
             const page = Number(req.params.page); // Convertir a número
             const limit = Number(req.params.limit); // Convertir a número
+           
             const startIndex = (page - 1) * limit;
             const endIndex = page * limit;
             let totalPages= Math.ceil(total/limit);
@@ -63,6 +64,7 @@ export class propertyController {
             const resultProperty = property_data.slice(startIndex, endIndex);
             console.log(resultProperty, totalPages,total);
             return res.status(200).json({properties:resultProperty,totalPages:totalPages,totalActivity:total});
+            
         } catch (error) {
             
             console.error('Error en la solicitud:', error);

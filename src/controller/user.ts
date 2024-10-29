@@ -28,18 +28,29 @@ export class userController {
       //const user_filter = {};
       const user_data = await userServices.getEntries.getAll();
       const total = user_data.length;
-
+      console.log("paginas recibidas:",req.params.page);
+      console.log("limite:",req.params.limit);
       const page = Number(req.params.page); // Convertir a número
       const limit = Number(req.params.limit); // Convertir a número
+      if(limit==0&&page==1){
+        console.log("los usuarios son:",user_data);
+        const totalPages=1;
+        return res.status(200).json({users: user_data, totalPages: totalPages, totalUser: total});
+
+      }else{
       const startIndex = (page - 1) * limit;
       const endIndex = page * limit;
       const totalPages = Math.ceil(total / limit);
 
       const resultUser = user_data.slice(startIndex, endIndex);
-
+      console.log(startIndex,endIndex); 
+      console.log(resultUser);
+      console.log("numero de usurarios:",total);
+      console.log("Numero de paginas:",totalPages);
       return res
         .status(200)
         .json({ users: resultUser, totalPages: totalPages, totalUser: total });
+      }
     } catch (error) {
       console.error('Error en la solicitud:', error);
       return res.status(500).json({ message: 'Error interno del servidor' });
