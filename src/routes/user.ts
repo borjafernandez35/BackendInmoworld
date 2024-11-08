@@ -17,7 +17,7 @@ router.get('/:id', async(req, res) => {
 })
 
 router.post('/', async(req, res) => {
-    user_controller.createUser(req, res);
+    user_controller.register(req, res);
 })
 
 router.post('/login', async(req, res) => {

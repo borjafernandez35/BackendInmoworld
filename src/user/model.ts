@@ -2,6 +2,9 @@
 import mongoose, { ObjectId } from "mongoose"
 
 
+// Admin user credentials
+// Name: Admin
+// Password: Admin
 export interface IUser{
     //_id?: mongoose.Types.ObjectId;
     name: string,
