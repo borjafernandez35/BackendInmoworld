@@ -13,9 +13,12 @@ export const getEntries = {
     findByName: async(username: string) => {
       return await user.findOne({ name: username })
     },
-    create: async(entry:object)=>{
-        console.log(entry);
-        return await user.create(entry);
+    create: async (entry: IUser) => {
+      try {
+        return await user.create(entry); // El hash de la contraseña se maneja en el middleware del modelo
+      } catch (error) {
+        throw error;
+      }
     },
     update: async(id:string,body:object)=>{
         console.log(body);

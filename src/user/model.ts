@@ -2,7 +2,7 @@
 import mongoose, { ObjectId } from "mongoose"
 
 
-// Admin user credentials
+// Admin user credentias
 // Name: Admin
 // Password: Admin
 export interface IUser{

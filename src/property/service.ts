@@ -20,23 +20,29 @@ export const getEntries = {
         }
     },
 
-    addPropertyToUser: async(userId: Types.ObjectId, activityId: Types.ObjectId): Promise<void>=> {
+    addPropertyToUser: async(userId: Types.ObjectId, activityId: Types.ObjectId): Promise<void> => {
         try {
             // Retrieve the user document by ID
-            const users = await user.findById(userId);
-            if (!users) {
+            const userDoc = await user.findById(userId);
+            
+            if (!userDoc) {
                 throw new Error('User not found');
             }
-
-            // Add the post ID to the user's array of posts
-            users.property.push(activityId);
-
-            // Save the updated user document
-            await users.save();
+    
+            // Verifica si 'property' está definido y es un array. Si no, inicializa un array vacío.
+            if (!Array.isArray(userDoc.property)) {
+                userDoc.property = [];
+            }
+    
+            // Agrega el ID de la actividad a la propiedad 'property' del usuario
+            userDoc.property.push(activityId);
+    
+            // Guarda el documento de usuario actualizado
+            await userDoc.save();
         } catch (error) {
             console.log(error);
             throw error;
-        }
+        }    
     },
 
     findUserById: async(id:string)=>{
