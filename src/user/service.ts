@@ -7,8 +7,8 @@ export const getEntries = {
     getAll: async()=>{
     return await user.find();
     },
-    findById: async(_id:string)=>{
-        return await user.findById(_id);
+    findById: (_id: string) => {
+      return user.findById(_id); 
     },
     findByName: async(username: string) => {
       return await user.findOne({ name: username })

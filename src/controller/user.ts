@@ -38,23 +38,32 @@ export class userController {
     }
   }
 
-  
-
   public async getUser(req: Request, res: Response) {
     try {
-      if (req.params.id) {
-        const user_filter = req.params.id;
-        // Fetch user
-        const user_data = await userServices.getEntries.findById(user_filter);
-        // Send success response
-        return res.status(200).json({ data: user_data, message: 'Successful' });
-      } else {
-        return res.status(400).json({ error: 'Missing fields' });
-      }
+        if (req.params.id) {
+            const user_filter = req.params.id;
+
+            // Usa populate en la consulta activa
+            const user_data = await userServices.getEntries
+                .findById(user_filter)
+                .populate('property');
+
+            if (!user_data) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            return res.status(200).json({ data: user_data, message: 'Successful' });
+        } else {
+            return res.status(400).json({ error: 'Missing fields' });
+        }
     } catch (error) {
-      return res.status(500).json({ error: 'Internal server error' });
+        console.error('Error fetching user:', error);
+        return res.status(500).json({ error: 'Internal server error' });
     }
   }
+
+  
+  
 
   public async login(req: Request, res: Response) {
     try {

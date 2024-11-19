@@ -64,6 +64,10 @@ export const getEntries = {
     },
 
     delete: async(id:string)=>{
+        await user.updateMany(
+            {},
+            { $pull: { property: id } },
+        );
         return await property.findByIdAndDelete(id);
     }
 }
