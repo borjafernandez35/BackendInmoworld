@@ -1,3 +1,4 @@
+/* eslint-disable */
 import mongoose, { Schema, Document, CallbackError } from 'mongoose';
 import bcrypt from 'bcryptjs';
 

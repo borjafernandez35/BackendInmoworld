@@ -78,10 +78,10 @@ export class userController {
                     if (user_data.name === 'Admin' && inputPassword === 'Administrador') {
                         return res.status(200).json({ data: user_data, message: 'Admin' });
                     } else {
-                        return res.status(201).json({ data: user_data, message: 'Login Successful' });
+                      return res.status(401).json({ message: 'Error, wrong username or password' });
                     }
                 } else {
-                    return res.status(401).json({ message: 'Error, wrong username or password' });
+                  return res.status(201).json({ data: user_data, message: 'Login Successful' });
                 }
             } else {
                 return res.status(404).json({ message: 'User not found' });
