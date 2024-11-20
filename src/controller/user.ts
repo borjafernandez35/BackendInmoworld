@@ -31,7 +31,6 @@ export class userController {
 
   public async getUser(req: Request, res: Response) {
     try {
-<<<<<<< HEAD
         if (req.params.id) {
             const user_filter = req.params.id;
 
@@ -48,14 +47,6 @@ export class userController {
         } else {
             return res.status(400).json({ error: 'Missing fields' });
         }
-=======
-      if (req.params.id) {
-        const user_data = await userServices.getEntries.findById(req.params.id);
-        return res.status(200).json({ data: user_data, message: 'Successful' });
-      } else {
-        return res.status(400).json({ error: 'Missing fields' });
-      }
->>>>>>> b11fb1a655b5fe063a9e62663ea98b94c02f9147
     } catch (error) {
         console.error('Error fetching user:', error);
         return res.status(500).json({ error: 'Internal server error' });
