@@ -1,19 +1,19 @@
-version: '3.8'
-
 services:
-  # Servei per a l'aplicació backend
+  # Servicio para la aplicación backend
   backend:
     image: chocoprisky14/backendinmo:1.0
     env_file:
       - .env
     ports:
-      - "3000:3000" # Exposa el port 3000 del contenidor al port 3000 de l'host
+      - "3000:3000" # Expone el puerto 3000 del contenedor al puerto 3000 del host
     depends_on:
-      - mongodb # S'assegura que MongoDB s'inicia abans que el backend
+      - mongodb # Asegura que MongoDB se inicie antes que el backend
+    networks:
+      - app-network
 
-   # Servicio para la aplicación frontend (Angular)
+  # Servicio para la aplicación frontend (Angular)
   backofice:
-    image: chocoprisky14/backoficeinmo:1.0
+    image: chocoprisky14/backofficeinmo:1.0
     build:
       context: ./frontend # Ruta relativa donde se encuentra el Dockerfile del frontend
       dockerfile: Dockerfile
@@ -24,18 +24,25 @@ services:
     networks:
       - app-network
 
-  # Servei per a MongoDB
+  # Servicio para MongoDB
   mongodb:
     image: mongo:latest
     container_name: mongodb
     ports:
-      - "27017:27017" # Exposa el port 27017 de MongoDB
+      - "27017:27017" # Expone el puerto 27017 de MongoDB
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root # Usuari administrador
-      - MONGO_INITDB_ROOT_PASSWORD=example # Contrasenya de l'usuari administrador
+      - MONGO_INITDB_ROOT_USERNAME=root # Usuario administrador
+      - MONGO_INITDB_ROOT_PASSWORD=example # Contraseña del usuario administrador
     volumes:
-      - mongodb_data:/data/db # Guarda les dades en un volum persistent
+      - mongodb_data:/data/db # Guarda los datos en un volumen persistente
+    networks:
+      - app-network
 
-# Volums per mantenir les dades de MongoDB
+# Volúmenes para mantener las datos de MongoDB
 volumes:
   mongodb_data:
+
+# Red compartida entre los servicios
+networks:
+  app-network:
+    driver: bridge

@@ -1,7 +1,7 @@
+/* eslint-disable */
 import { Request, Response } from 'express'
 import { IProperty } from '../property/model'
 import * as propertiesServices from '../property/service'
-/* eslint-disable */
 //import * as usersServices from '../user/service';
 
 
