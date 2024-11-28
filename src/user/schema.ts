@@ -2,10 +2,11 @@
 import mongoose, { Schema, Document, CallbackError } from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-export interface IUser extends Document {
+export interface IUser extends Document {  
   name: string;
   email: string;
   password: string;
+  isAdmin: boolean;
   property?: mongoose.Types.ObjectId[];
 }
 
@@ -13,7 +14,8 @@ const schema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  property: [{ type: Schema.Types.ObjectId, ref: 'property' }]
+  isAdmin: { type: Boolean, default: false },
+  property: [{ type: Schema.Types.ObjectId, ref: 'property', required:false }]
 });
 
 // Middleware para cifrar la contraseña antes de guardarla
@@ -30,4 +32,4 @@ schema.pre<IUser>('save', async function(next) {
     }
 });
 
-export default mongoose.model<IUser>('User', schema);
+export default mongoose.model<IUser>('user', schema);

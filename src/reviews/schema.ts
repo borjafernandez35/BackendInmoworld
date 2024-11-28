@@ -8,4 +8,4 @@ export const schema = new Schema({
   description: { type: String, required: true }
 })
 
-export default mongoose.model('review', schema)
+export default mongoose.model('reviews', schema)

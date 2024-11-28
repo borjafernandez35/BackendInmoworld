@@ -11,4 +11,4 @@ export const schema = new Schema<IProperty>({
     //picture:[{type: String, required: false}] 
 })
 
-export default mongoose.model('property',schema)
+export default mongoose.model('properties',schema)

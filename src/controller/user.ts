@@ -2,7 +2,7 @@
 import { Request, Response } from 'express';
 import { IUser } from '../user/model';
 import * as userServices from '../user/service';
-import bcrypt from 'bcryptjs'; // Solo importa bcrypt una vez aquí
+//import bcrypt from 'bcryptjs'; // Solo importa bcrypt una vez aquí
 
 export class userController {
 
@@ -56,7 +56,7 @@ export class userController {
   
   
 
-  public async login(req: Request, res: Response) {
+ /*  public async login(req: Request, res: Response) {
     try {
         // Verificar si se proporcionaron los campos requeridos
         if (req.body.username && req.body.password) {
@@ -93,17 +93,23 @@ export class userController {
         console.error(error);
         return res.status(500).json({ error: 'Internal server error' });
     }
-}
+} */
 
   
 
 public async register(req: Request, res: Response) {
   try {
+    console.log("REGiiisssSTERRRRRRR:",req.body.name,req.body.email,req.body.password,req.body.isAdmin)
       if (req.body.name && req.body.email && req.body.password) {
+
+        console.log("estoy en register!!!!:",req.body.name);
+
+
           const user_params: IUser = {
               name: req.body.name,
               email: req.body.email,
               password: req.body.password,  // Guarda la contraseña en texto claro y deja que el middleware la cifre
+              isAdmin:req.body.isAdmin
           };
 
           const user_data = await userServices.getEntries.create(user_params);

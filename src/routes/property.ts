@@ -1,13 +1,14 @@
 /* eslint-disable */
 import express from 'express';
 import {propertyController} from '../controller/property';
+import {verifyToken,isOwner,AdminValidation} from '../middlewares/authJWT'
 
 
 
 const router = express.Router()
 const property_controller: propertyController = new propertyController();
 
-router.get('/:page/:limit', async(_req, res) => {
+router.get('/:page/:limit',verifyToken, async(_req, res) => {
      await property_controller.getAll(_req, res);
 })
 
@@ -21,7 +22,7 @@ router.get('/:page/:limit', async(_req, res) => {
     return res.json(data);
 }) */
 
-router.post('/:id', async(req, res) => {
+router.post('/:id', verifyToken, async(req, res) => {
     property_controller.createProperty(req, res);
 })
 
@@ -30,11 +31,11 @@ router.post('/:id', async(req, res) => {
     return res.json(data);
 }) */
 
-router.put('/:id', async(req, res) => {
+router.put('/:id',verifyToken,isOwner, async(req, res) => {
     property_controller.updateProperty(req, res);
 })
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:id',verifyToken,AdminValidation||isOwner, async(req, res) => {
     property_controller.deleteProperty(req, res);
 })
 

@@ -31,6 +31,37 @@ export const getEntries = {
           throw error;
         }
       },
+    filterUser: async(query: any): Promise<IUser | null>=> {
+        try {
+          console.log("que hay aqui",query);
+          const activeQuery = { ...query, active: true };
+          console.log("activeeeeee",activeQuery);
+          return await user.findOne(activeQuery);
+        } catch (error) {
+          throw error;
+        }
+      },
+
+      filterUserEmail: async(email:string): Promise<IUser | null>=> {
+        try {
+          
+          return await user.findOne({ email: email });
+        } catch (error) {
+          throw error;
+        }
+      },
+
+
+
+      checkEmailExists: async(email: string): Promise<boolean>=> {
+        try {
+          const existingUser = await user.findOne({ email: email });
+          return !!existingUser; // Devuelve true si existe el usuario, false si no existe
+        } catch (error) {
+          throw error;
+        }
+      },
+
     delete: async(id:string)=>{
         return await user.findByIdAndDelete(id);
     },
