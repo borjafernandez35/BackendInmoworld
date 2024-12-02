@@ -24,7 +24,7 @@ export async function verifyToken (req: Request, res: Response, next: NextFuncti
     console.log("verifyToken");
     console.log(decoded);
     req.userId= decoded.id;
-    const user = await users.findById({us: decoded.id}, { password: 0 });
+    const user = await users.findById(decoded.id);
     console.log(user);
     if (!user) return res.status(404).json({ message: "No user found" });
 

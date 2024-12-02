@@ -31,13 +31,17 @@ export class userController {
 
   public async getUser(req: Request, res: Response) {
     try {
+      console.log('el id es:',req.params.id);
+      console.log('el _id es:', req.params._id);
         if (req.params.id) {
             const user_filter = req.params.id;
 
             // Usa populate en la consulta activa
             const user_data = await userServices.getEntries
-                .findById(user_filter)
-                .populate('property');
+                .findById(user_filter);
+                //.populate('property');
+
+                console.log('el iser es:',user_data);
 
             if (!user_data) {
                 return res.status(404).json({ error: 'User not found' });

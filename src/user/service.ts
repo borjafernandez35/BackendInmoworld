@@ -8,6 +8,7 @@ export const getEntries = {
     return await user.find();
     },
     findById: (_id: string) => {
+      console.log('el _id es:',_id);
       return user.findById(_id); 
     },
     findByName: async(username: string) => {
