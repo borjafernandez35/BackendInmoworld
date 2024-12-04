@@ -33,14 +33,18 @@ exports.getEntries = {
     addPropertyToUser: (userId, activityId) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             // Retrieve the user document by ID
-            const users = yield schema_2.default.findById(userId);
-            if (!users) {
+            const userDoc = yield schema_2.default.findById(userId);
+            if (!userDoc) {
                 throw new Error('User not found');
             }
-            // Add the post ID to the user's array of posts
-            users.property.push(activityId);
-            // Save the updated user document
-            yield users.save();
+            // Verifica si 'property' está definido y es un array. Si no, inicializa un array vacío.
+            if (!Array.isArray(userDoc.property)) {
+                userDoc.property = [];
+            }
+            // Agrega el ID de la actividad a la propiedad 'property' del usuario
+            userDoc.property.push(activityId);
+            // Guarda el documento de usuario actualizado
+            yield userDoc.save();
         }
         catch (error) {
             console.log(error);
@@ -72,6 +76,7 @@ exports.getEntries = {
         }
     }),
     delete: (id) => __awaiter(void 0, void 0, void 0, function* () {
+        yield schema_2.default.updateMany({}, { $pull: { property: id } });
         return yield schema_1.default.findByIdAndDelete(id);
     })
 };

@@ -118,22 +118,34 @@ export async function reviewOwner (req: Request, res: Response, next: NextFuncti
   export const verifyOwnership = async (req: Request, res: Response, next: NextFunction) => {
     try {
       console.log('Verificando usuario');
+
+      console.log('user Id:',req.userId);
   
       // ID del usuario autenticado (decodificado en verifyToken)
       const userIdFromToken = req.userId; 
+
       if (!userIdFromToken) {
         return res.status(401).json({ message: 'Unauthorized: Missing user ID' });
       }
+
+      console.log('el correo es:',req.body.email);
+      console.log('el id params es:',req.params.id);
   
       // Verifica si el email proporcionado corresponde a un usuario
-      const email = req.body.email; 
-      const user = await userServices.getEntries.filterUser({ email: email });
+      //const email = req.body.email; 
+      const user = await userServices.getEntries.findByIdUser(userIdFromToken);
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
+
+      console.log('el user es:',user);
   
       // Compara los IDs para verificar propiedad
+      
       const targetUserId = user._id; // Convertimos a string para comparación
+
+      console.log('el userid es:',userIdFromToken);
+      console.log('el target Id es:',targetUserId);
       if (userIdFromToken === targetUserId) {
         console.log('Permiso concedido, pasando al siguiente middleware');
         return next();

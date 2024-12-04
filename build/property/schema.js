@@ -34,4 +34,4 @@ exports.schema = new mongoose_1.Schema({
     //coordinate: [{type: Number, required: false}],
     //picture:[{type: String, required: false}] 
 });
-exports.default = mongoose_1.default.model('property', exports.schema);
+exports.default = mongoose_1.default.model('properties', exports.schema);

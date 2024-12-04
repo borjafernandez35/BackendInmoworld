@@ -34,7 +34,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.propertyController = void 0;
 const propertiesServices = __importStar(require("../property/service"));
-/* eslint-disable */
 //import * as usersServices from '../user/service';
 class propertyController {
     createProperty(req, res) {
@@ -127,8 +126,6 @@ class propertyController {
                         //picture: req.body.picture
                         //active: true
                     };
-                    const property_data = yield propertiesServices.getEntries.create(property_params);
-                    yield propertiesServices.getEntries.addPropertyToUser(req.body.owner, property_data._id);
                     yield propertiesServices.getEntries.updateProperty(property_params, property_filter);
                     //get new activity data
                     const new_activity_data = yield propertiesServices.getEntries.filterProperty(property_filter);

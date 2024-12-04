@@ -15,9 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable */
 const express_1 = __importDefault(require("express"));
 const property_1 = require("../controller/property");
+const authJWT_1 = require("../middlewares/authJWT");
 const router = express_1.default.Router();
 const property_controller = new property_1.propertyController();
-router.get('/:page/:limit', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:page/:limit', authJWT_1.verifyToken, (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     yield property_controller.getAll(_req, res);
 }));
 /* router.get('/:id', async(req, res) => {
@@ -28,17 +29,17 @@ router.get('/:page/:limit', (_req, res) => __awaiter(void 0, void 0, void 0, fun
     const data = await experienciasServices.getEntries.findUserById(req.params.id)
     return res.json(data);
 }) */
-router.post('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/:id', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     property_controller.createProperty(req, res);
 }));
 /* router.post('/addParticipant/:idExp/:idPart', async(req, res) => {
     const data = await experienciasServices.getEntries.addParticipant(req.params.idExp,req.params.idPart)
     return res.json(data);
 }) */
-router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put('/:id', authJWT_1.verifyToken, authJWT_1.isOwner, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     property_controller.updateProperty(req, res);
 }));
-router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authJWT_1.verifyToken, authJWT_1.AdminValidation || authJWT_1.isOwner, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     property_controller.deleteProperty(req, res);
 }));
 /* router.delete('/delParticipant/:idExp/:idPart', async(req, res) => {

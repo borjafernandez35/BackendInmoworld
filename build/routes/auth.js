@@ -14,23 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable */
 const express_1 = __importDefault(require("express"));
-const review_1 = require("../controller/review");
-const authJWT_1 = require("../middlewares/authJWT");
+const authController_1 = require("../controller/authController");
 const router = express_1.default.Router();
-const review_controller = new review_1.reviewController();
-router.get('/:page/:limit', authJWT_1.verifyToken, (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    review_controller.getAll(_req, res);
+const authController = new authController_1.AuthController();
+// Ruta para iniciar sesión
+router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    authController.signIn(req, res);
 }));
-router.get('/:id', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    review_controller.getReview(req, res);
-}));
-router.post('/', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    review_controller.createReview(req, res);
-}));
-router.put('/:id', authJWT_1.verifyToken, authJWT_1.reviewOwner, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    review_controller.updateReview(req, res);
-}));
-router.delete('/:id', authJWT_1.verifyToken, authJWT_1.reviewOwner || authJWT_1.AdminValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    review_controller.deleteReview(req, res);
+// Ruta para refrescar el token
+router.post('/refresh-token', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    authController.refreshToken(req, res);
 }));
 exports.default = router;

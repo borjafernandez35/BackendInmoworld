@@ -1,5 +1,5 @@
 /* eslint-disable */
-import mongoose, { ObjectId } from "mongoose";
+import  { ObjectId } from "mongoose";
 
 export interface IProperty{
     //_id?: mongoose.Types.ObjectId;

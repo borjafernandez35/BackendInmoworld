@@ -3,7 +3,6 @@ import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
 import IJwtPayload from '../middlewares/JWTPayload';
 import * as userServices from '../user/service';
-import bcrypt from 'bcryptjs';
 
 export class AuthController {
   private _SECRET: string = 'api+jwt';
@@ -29,7 +28,7 @@ export class AuthController {
       }
 
       // Verificar que el password sea válido
-      const isPasswordValid = await bcrypt.compare(password.trim(), user_data.password.trim());
+      const isPasswordValid = await userServices.getEntries.validatePassword(password.trim(), user_data.password.trim());
       if (!isPasswordValid) {
         return res.status(401).json({ message: 'Error, wrong email or password' });
       }

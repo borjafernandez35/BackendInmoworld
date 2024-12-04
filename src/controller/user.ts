@@ -108,11 +108,18 @@ public async register(req: Request, res: Response) {
 
         console.log("estoy en register!!!!:",req.body.name);
 
+      if (typeof req.body.password !== 'string') {
+        throw new Error('Invalid password');
+      }
+    const password = await userServices.getEntries.encryptPassword(req.body.password);
+
+  
+
 
           const user_params: IUser = {
               name: req.body.name,
               email: req.body.email,
-              password: req.body.password,  // Guarda la contraseña en texto claro y deja que el middleware la cifre
+              password:password,  // Guarda la contraseña en texto claro y deja que el middleware la cifre
               isAdmin:req.body.isAdmin
           };
 

@@ -1,6 +1,8 @@
 /* eslint-disable */
+import {  Types } from 'mongoose';
 import { IUser } from './model';
 import user from './schema';
+import * as bcrypt from 'bcrypt';
 //import userData from './users.json'
 
 export const getEntries = {
@@ -11,12 +13,23 @@ export const getEntries = {
       console.log('el _id es:',_id);
       return user.findById(_id); 
     },
+    findByIdUser:(_id: Types.ObjectId)=>{console.log('el _id es:',_id);
+      return user.findById(_id);},
     findByName: async(username: string) => {
       return await user.findOne({ name: username })
     },
+    encryptPassword: async(password: string)=> {
+      const salt = await bcrypt.genSalt(10);
+      return bcrypt.hash(password, salt);
+    },
+  
+  validatePassword:(password: string, person: string)=> {
+      return bcrypt.compare(password, person);
+    },
+
     create: async (entry: IUser) => {
       try {
-        return await user.create(entry); // El hash de la contraseña se maneja en el middleware del modelo
+      return await user.create(entry); // El hash de la contraseña se maneja en el middleware del modelo
       } catch (error) {
         throw error;
       }

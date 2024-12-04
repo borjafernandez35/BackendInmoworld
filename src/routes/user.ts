@@ -13,7 +13,7 @@ router.get('/:page/:limit',verifyToken, async(_req, res) => {
     user_controller.getAll(_req, res);
 })
 
-router.get('/:id',verifyToken, async(req, res) => {
+router.get('/:id',verifyToken,verifyOwnership, async(req, res) => {
     user_controller.getUser(req, res);
 })
 
@@ -29,7 +29,7 @@ router.post('/register', async(req, res) => {
     user_controller.register(req, res)
 })
 
-router.put('/:id',verifyToken,AdminValidation||verifyOwnership, async (req, res) => {
+router.put('/:id',verifyToken,verifyOwnership, async (req, res) => {
     user_controller.updateUser(req, res);
 })
 

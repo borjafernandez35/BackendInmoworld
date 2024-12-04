@@ -32,4 +32,4 @@ exports.schema = new mongoose_1.Schema({
     date: { type: Date, default: Date.now, required: true },
     description: { type: String, required: true }
 });
-exports.default = mongoose_1.default.model('review', exports.schema);
+exports.default = mongoose_1.default.model('reviews', exports.schema);
