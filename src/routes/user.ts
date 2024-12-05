@@ -1,7 +1,7 @@
 /* eslint-disable */
 import express from 'express'
 import {userController} from '../controller/user'
-import {verifyToken,verifyOwnership,AdminValidation} from '../middlewares/authJWT'
+import {verifyToken, validateUserOrAdmin} from '../middlewares/authJWT'
 /* eslint-disable */
 
 //import toNewUser from '../extras/utils'
@@ -13,7 +13,7 @@ router.get('/:page/:limit',verifyToken, async(_req, res) => {
     user_controller.getAll(_req, res);
 })
 
-router.get('/:id',verifyToken,verifyOwnership, async(req, res) => {
+router.get('/:id',verifyToken,validateUserOrAdmin, async(req, res) => {
     user_controller.getUser(req, res);
 })
 
@@ -29,11 +29,11 @@ router.post('/register', async(req, res) => {
     user_controller.register(req, res)
 })
 
-router.put('/:id',verifyToken,verifyOwnership, async (req, res) => {
+router.put('/:id',verifyToken,validateUserOrAdmin, async (req, res) => {
     user_controller.updateUser(req, res);
 })
 
-router.delete('/:id',verifyToken,AdminValidation||verifyOwnership, async(req, res) => {
+router.delete('/:id',verifyToken,validateUserOrAdmin, async(req, res) => {
     user_controller.deleteUser(req, res);
 })
 

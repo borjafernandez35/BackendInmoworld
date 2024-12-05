@@ -35,10 +35,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyOwnership = exports.AdminValidation = void 0;
+exports.validateUserOrAdmin = exports.AdminValidation = void 0;
 exports.verifyToken = verifyToken;
 exports.isOwner = isOwner;
+exports.isOwnerorAdmin = isOwnerorAdmin;
 exports.reviewOwner = reviewOwner;
+exports.reviewOwnerorAdmin = reviewOwnerorAdmin;
 const jwt = __importStar(require("jsonwebtoken"));
 const schema_1 = __importDefault(require("../reviews/schema"));
 const schema_2 = __importDefault(require("../user/schema"));
@@ -90,9 +92,88 @@ function isOwner(req, res, next) {
     });
 }
 ;
+function isOwnerorAdmin(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log('Verificando acceso del propetario');
+            //const user = await users.find({userId: req.body._id});
+            const token = req.header("x-access-token");
+            if (!token) {
+                return res.status(401).json({ message: 'Access Token Missing' });
+            }
+            const decoded = jwt.verify(token, _SECRET); // Usa la clave secreta adecuada
+            const userIdFromToken = req.userId;
+            const isAdmin = decoded === null || decoded === void 0 ? void 0 : decoded.isAdmin;
+            if (!userIdFromToken) {
+                return res.status(401).json({ message: 'Unauthorized: Missing user ID' });
+            }
+            // Si el usuario es admin, pasa directamente
+            if (isAdmin) {
+                console.log('Admin verified');
+                return next();
+            }
+            const propertyId = req.params.id;
+            const property = yield schema_3.default.findById(propertyId);
+            if (!property)
+                return res.status(403).json({ message: "No user found" });
+            if (property.owner != req.body._id)
+                return res.status(403).json({ message: "Not Owner" });
+            console.log("Ownership verified.");
+            return next();
+        }
+        catch (error) {
+            console.log(error);
+            return res.status(500).send({ message: error });
+        }
+    });
+}
+;
 function reviewOwner(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const user = yield schema_2.default.findOne({ userId: req.body._id });
+            if (!user || !user._id) {
+                return res.status(403).json({ message: "User not found" });
+            }
+            console.log("estas aqui: " + user._id);
+            const reviewId = req.params.id;
+            const review = yield schema_1.default.findById(reviewId);
+            if (!review || !review.user) {
+                return res.status(403).json({ message: "Review not found" });
+            }
+            console.log("Post owner: " + review.user);
+            if (req.userId != review.user) {
+                return res.status(403).json({ message: "Not the owner" });
+            }
+            console.log("Review ownership verified.");
+            return next();
+        }
+        catch (error) {
+            console.log(error);
+            return res.status(500).send({ message: error });
+        }
+    });
+}
+;
+function reviewOwnerorAdmin(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            console.log('Verificando acceso del comentario');
+            const token = req.header("x-access-token");
+            if (!token) {
+                return res.status(401).json({ message: 'Access Token Missing' });
+            }
+            const decoded = jwt.verify(token, _SECRET); // Usa la clave secreta adecuada
+            const userIdFromToken = req.userId;
+            const isAdmin = decoded === null || decoded === void 0 ? void 0 : decoded.isAdmin;
+            if (!userIdFromToken) {
+                return res.status(401).json({ message: 'Unauthorized: Missing user ID' });
+            }
+            // Si el usuario es admin, pasa directamente
+            if (isAdmin) {
+                console.log('Admin verified');
+                return next();
+            }
             const user = yield schema_2.default.findOne({ userId: req.body._id });
             if (!user || !user._id) {
                 return res.status(403).json({ message: "User not found" });
@@ -138,38 +219,97 @@ const AdminValidation = (req, res, next) => {
     }
 };
 exports.AdminValidation = AdminValidation;
-const verifyOwnership = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+/*  export const verifyOwnership = async (req: Request, res: Response, next: NextFunction) => {
+   try {
+     console.log('Verificando usuario');
+
+     console.log('user Id:',req.userId);
+ 
+     // ID del usuario autenticado (decodificado en verifyToken)
+     const userIdFromToken = req.userId;
+
+     if (!userIdFromToken) {
+       return res.status(401).json({ message: 'Unauthorized: Missing user ID' });
+     }
+
+     console.log('el correo es:',req.body.email);
+     console.log('el id params es:',req.params.id);
+ 
+     // Verifica si el email proporcionado corresponde a un usuario
+     //const email = req.body.email;
+     const user = await userServices.getEntries.findByIdUser(userIdFromToken);
+     if (!user) {
+       return res.status(404).json({ message: 'User not found' });
+     }
+
+     console.log('el user es:',user);
+ 
+     // Compara los IDs para verificar propiedad
+     
+     const targetUserId = user._id; // Convertimos a string para comparación
+
+     const id= targetUserId.toString();
+     const id2= userIdFromToken.toString();
+
+     console.log('el userid es:',userIdFromToken);
+     console.log('el target Id es:',targetUserId);
+     console.log('el IIIIDDDDDD es:', id);
+     console.log('el IIIIDDDDDD es:', id2);
+
+     if (id==id2) {
+       console.log('Permiso concedido, pasando al siguiente middleware');
+       return next();
+     }
+ 
+     // Si no coincide, retorna error de autorización
+     return res.status(403).json({ message: 'Not Owner' });
+ 
+   } catch (error) {
+     console.error('Error en verifyOwnership:', error);
+     return res.status(500).json({ message: 'Internal server error' });
+   }
+ }; */
+const validateUserOrAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log('Verificando usuario');
-        console.log('user Id:', req.userId);
-        // ID del usuario autenticado (decodificado en verifyToken)
+        console.log('Verificando acceso del usuario');
+        const token = req.header("x-access-token");
+        if (!token) {
+            return res.status(401).json({ message: 'Access Token Missing' });
+        }
+        const decoded = jwt.verify(token, _SECRET); // Usa la clave secreta adecuada
         const userIdFromToken = req.userId;
+        const isAdmin = decoded === null || decoded === void 0 ? void 0 : decoded.isAdmin;
         if (!userIdFromToken) {
             return res.status(401).json({ message: 'Unauthorized: Missing user ID' });
         }
-        console.log('el correo es:', req.body.email);
-        console.log('el id params es:', req.params.id);
-        // Verifica si el email proporcionado corresponde a un usuario
-        //const email = req.body.email; 
+        // Si el usuario es admin, pasa directamente
+        if (isAdmin) {
+            console.log('Admin verified');
+            return next();
+        }
+        // Si no es admin, verifica propiedad
+        // Se espera que el ID del objetivo esté en los parámetros
         const user = yield userServices.getEntries.findByIdUser(userIdFromToken);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        console.log('el user es:', user);
-        // Compara los IDs para verificar propiedad
-        const targetUserId = user._id; // Convertimos a string para comparación
+        console.log('el usuario es:', user);
+        const targetUserId = user._id;
+        const id = targetUserId.toString();
+        const id2 = userIdFromToken.toString();
         console.log('el userid es:', userIdFromToken);
         console.log('el target Id es:', targetUserId);
-        if (userIdFromToken === targetUserId) {
-            console.log('Permiso concedido, pasando al siguiente middleware');
+        console.log('el IIIIDDDDDD es:', id);
+        console.log('el IIIIDDDDDD es:', id2);
+        if (id == id2) {
+            console.log('Owner verified');
             return next();
         }
-        // Si no coincide, retorna error de autorización
         return res.status(403).json({ message: 'Not Owner' });
     }
     catch (error) {
-        console.error('Error en verifyOwnership:', error);
+        console.error('Error verifying access:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 });
-exports.verifyOwnership = verifyOwnership;
+exports.validateUserOrAdmin = validateUserOrAdmin;

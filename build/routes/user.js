@@ -23,7 +23,7 @@ const user_controller = new user_1.userController();
 router.get('/:page/:limit', authJWT_1.verifyToken, (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     user_controller.getAll(_req, res);
 }));
-router.get('/:id', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:id', authJWT_1.verifyToken, authJWT_1.validateUserOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     user_controller.getUser(req, res);
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -35,10 +35,10 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     user_controller.register(req, res);
 }));
-router.put('/:id', authJWT_1.verifyToken, authJWT_1.verifyOwnership, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put('/:id', authJWT_1.verifyToken, authJWT_1.validateUserOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     user_controller.updateUser(req, res);
 }));
-router.delete('/:id', authJWT_1.verifyToken, authJWT_1.AdminValidation || authJWT_1.verifyOwnership, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authJWT_1.verifyToken, authJWT_1.validateUserOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     user_controller.deleteUser(req, res);
 }));
 /* router.delete('/delParticipant/:idUser/:idExp', async(req, res) => {
