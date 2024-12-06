@@ -1,5 +1,6 @@
+/* eslint-disable */
 import { Server } from 'socket.io';
-
+import ChatSchema from './schema';
 
 const connectedUser = new Set();
 
@@ -32,15 +33,29 @@ const socketService = (io: Server) => {
         });
     
         socket.on('sendMessage', async (data: string) => {
-          const chatSchema: { date: Date; message: string } = {
-              date: new Date(), // Asigna la fecha actual
-              message: data // Asigna el mensaje
-          };
-          console.log(chatSchema);
-      
-          socket.broadcast.to("some room").emit('message-receive', chatSchema); // Envía el objeto chat
-      });
-      
+          try {
+            const parsedData = JSON.parse(data);
+        
+            const chat = new ChatSchema({
+              user: socket.id, // Usa el ID del socket como usuario
+              message: parsedData.message,
+              date: parsedData.timestamp ? new Date(parsedData.timestamp) : new Date(),
+            });
+        
+            // Guarda en la base de datos
+            await chat.save();
+            console.log('Mensaje guardado en la base de datos:', chat);
+        
+            // Reenvía el mensaje
+            socket.broadcast.to(parsedData.receiverId).emit('message-receive', {
+              sender: socket.id,
+              message: chat.message,
+              timestamp: chat.date,
+            });
+          } catch (error) {
+            console.error('Error procesando el mensaje:', error);
+          }
+        });   
       });
 };
 

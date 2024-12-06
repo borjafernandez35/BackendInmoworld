@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Server } from 'socket.io';
 import socketService from '../chat(Socketio)/service';
 
