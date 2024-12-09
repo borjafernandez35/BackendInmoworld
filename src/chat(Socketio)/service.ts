@@ -27,7 +27,7 @@ const socketService = (io: Server) => {
               date: new Date(), // Asigna la fecha actual
               message: data // Asigna el mensaje
           };
-          console.log(chatSchema);
+          console.log("Entra en message ",chatSchema);
       
           socket.broadcast.to("some room").emit('message-receive', chatSchema);
         });
@@ -37,9 +37,10 @@ const socketService = (io: Server) => {
             const parsedData = JSON.parse(data);
         
             const chat = new ChatSchema({
-              user: socket.id, // Usa el ID del socket como usuario
+              receiver: parsedData.receiver, // Usa el ID del socket como usuario
+              sender: parsedData.sender,
               message: parsedData.message,
-              date: parsedData.timestamp ? new Date(parsedData.timestamp) : new Date(),
+              date: parsedData.timestamp
             });
         
             // Guarda en la base de datos
@@ -48,6 +49,7 @@ const socketService = (io: Server) => {
         
             // Reenvía el mensaje
             socket.broadcast.to(parsedData.receiverId).emit('message-receive', {
+              receiver: chat.receiver,
               sender: socket.id,
               message: chat.message,
               timestamp: chat.date,

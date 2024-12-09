@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';

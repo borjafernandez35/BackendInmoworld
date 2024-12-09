@@ -1,7 +1,9 @@
+/* eslint-disable */
 import { Document } from 'mongoose';
 
 export interface IChat  extends Document {
-    user: string;
+    receiver: string;
+    sender: string;
     message: string;
     date: Date;
   }

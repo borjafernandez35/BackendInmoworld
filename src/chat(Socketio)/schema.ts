@@ -4,7 +4,8 @@ import { IChat } from './model'
 
 
 const chatSchema: Schema = new Schema({
-    user: { type: String, required: true },
+    receiver: { type: String, required: true },
+    sender: { type: String, required: true },
     message: { type: String, required: true },
     date: { type: Date, default: Date.now }
   });

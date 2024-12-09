@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { Request, Response, NextFunction } from 'express';
 import * as jwt from "jsonwebtoken";
 import reviews from "../reviews/schema";

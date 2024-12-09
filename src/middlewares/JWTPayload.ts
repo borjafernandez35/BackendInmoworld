@@ -1,3 +1,4 @@
+/* eslint-disable */
 import mongoose from 'mongoose';
 
 export default interface IJwtPayload {
