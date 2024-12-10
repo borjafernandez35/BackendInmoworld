@@ -34,8 +34,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const userServices = __importStar(require("../user/service"));
-//import bcrypt from 'bcryptjs'; // Solo importa bcrypt una vez aquí
+const crypto = __importStar(require("crypto"));
+const jwt = __importStar(require("jsonwebtoken"));
 class userController {
+    constructor() {
+        this._SECRET = 'api+jwt';
+        this.refreshTokenSecret = crypto.randomBytes(64).toString('hex');
+        this._REFRESH_SECRET = this.refreshTokenSecret;
+    }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
@@ -88,49 +94,71 @@ class userController {
             }
         });
     }
-    /*  public async login(req: Request, res: Response) {
-       try {
-           // Verificar si se proporcionaron los campos requeridos
-           if (req.body.username && req.body.password) {
-               const user_filter = req.body.username;
-               const user_data = await userServices.getEntries.findByName(user_filter);
-   
-               if (user_data) {
-                   const inputPassword = req.body.password.trim();
-                   const storedHash = user_data.password.trim();
-                   console.log('Comparando inputPassword y storedHash...');
-                   console.log('inputPassword (longitud):', inputPassword.length, 'Contenido:', inputPassword);
-                   console.log('storedHash (longitud):', storedHash.length, 'Contenido:', storedHash);
-   
-                   const isPasswordValid = await bcrypt.compare(inputPassword, storedHash);
-                   console.log('Resultado de bcrypt.compare:', isPasswordValid);
-   
-                   if (!isPasswordValid) {
-                       // Verificar si es el usuario Admin
-                       if (user_data.name === 'Admin' && inputPassword === 'Administrador') {
-                           return res.status(200).json({ data: user_data, message: 'Admin' });
-                       } else {
-                         return res.status(401).json({ message: 'Error, wrong username or password' });
-                       }
-                   } else {
-                     return res.status(201).json({ data: user_data, message: 'Login Successful' });
-                   }
-               } else {
-                   return res.status(404).json({ message: 'User not found' });
-               }
-           } else {
-               return res.status(400).json({ message: 'Missing fields' });
-           }
-       } catch (error) {
-           console.error(error);
-           return res.status(500).json({ error: 'Internal server error' });
-       }
-   } */
+    createUserGoogle(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                if (req.body.name &&
+                    req.body.email &&
+                    req.body.password &&
+                    req.body.birthday) {
+                    console.log("estoy en register!!!!:", req.body.name);
+                    if (typeof req.body.password !== 'string') {
+                        throw new Error('Invalid password');
+                    }
+                    const password = yield userServices.getEntries.encryptPassword(req.body.password);
+                    const user_params = {
+                        name: req.body.name,
+                        email: req.body.email,
+                        birthday: req.body.birthday,
+                        isAdmin: false,
+                        password: password
+                    };
+                    const user_data = yield userServices.getEntries.createUserGoogle(user_params);
+                    const email = req.body.email;
+                    const userFound = yield userServices.getEntries.filterUserEmail(email);
+                    if (!userFound) {
+                        return res.status(404).json({ message: 'User Not Found' });
+                    }
+                    const session = { id: userFound._id, isAdmin: userFound.isAdmin };
+                    const token = jwt.sign(session, this._SECRET, {
+                        expiresIn: 86400,
+                    });
+                    const refreshToken = jwt.sign(session, this._REFRESH_SECRET, {
+                        expiresIn: 604800, // 7 days
+                    });
+                    return res
+                        .status(201)
+                        .json({ message: 'User created successfully', user: user_data, token: token, refreshToken: refreshToken, id: userFound._id });
+                }
+                else {
+                    return res.status(400).json({ error: 'Missing fields' });
+                }
+            }
+            catch (error) {
+                console.log('error', error);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
+        });
+    }
+    checkEmailExists(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const email = req.params.email; // Obtener el correo electrónico de los parámetros de la solicitud
+                const isEmailRegistered = yield userServices.getEntries.checkEmailExists(email);
+                console.log('el isemailregistered es:', isEmailRegistered);
+                return res.status(200).json({ isEmailRegistered });
+            }
+            catch (error) {
+                console.error('Error checking email:', error);
+                return res.status(500).json({ error: 'Internal server error' });
+            }
+        });
+    }
     register(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("REGiiisssSTERRRRRRR:", req.body.name, req.body.email, req.body.password, req.body.isAdmin);
-                if (req.body.name && req.body.email && req.body.password) {
+                console.log("REGiiisssSTERRRRRRR:", req.body.name, req.body.email, req.body.password, req.body.isAdmin, req.body.birthday);
+                if (req.body.name && req.body.email && req.body.password && req.body.birthday) {
                     console.log("estoy en register!!!!:", req.body.name);
                     if (typeof req.body.password !== 'string') {
                         throw new Error('Invalid password');
@@ -140,7 +168,8 @@ class userController {
                         name: req.body.name,
                         email: req.body.email,
                         password: password, // Guarda la contraseña en texto claro y deja que el middleware la cifre
-                        isAdmin: req.body.isAdmin
+                        isAdmin: req.body.isAdmin,
+                        birthday: req.body.birthday
                     };
                     const user_data = yield userServices.getEntries.create(user_params);
                     return res.status(201).json({ message: 'User registered successfully', user: user_data });
@@ -165,7 +194,8 @@ class userController {
                     const user_params = {
                         name: req.body.name || user_data.name,
                         email: req.body.email || user_data.email,
-                        password: req.body.password || user_data.password
+                        password: req.body.password || user_data.password,
+                        birthday: req.body.birthday || user_data.birthday
                     };
                     yield userServices.getEntries.updateUser(user_params, { _id: req.params.id });
                     const new_user_data = yield userServices.getEntries.findById(req.params.id);

@@ -47,12 +47,47 @@ export class AuthController {
           id: user_data._id,
           name: user_data.name,
           email: user_data.email,
+          birthday:user_data.birthday,
           isAdmin: user_data.isAdmin,
         },
       });
     } catch (error) {
       console.error('Error in authenticate:', error);
       return res.status(500).json({ message: 'Internal server error' });
+    }
+  }
+
+  public async signingooggle(req: Request, res: Response): Promise<Response> {
+    const email = req.body.email;
+  
+    try {
+      const userFound = await userServices.getEntries.filterUserEmail(email);
+      console.log('el userFound es',userFound);
+  
+      if (!userFound) {
+        return res.status(404).json({ message: 'User Not Found' });
+      }
+      const session = { id: userFound._id, isAdmin:userFound.isAdmin } as IJwtPayload;
+
+    const token = jwt.sign(session, this._SECRET, {
+      expiresIn: 86400,
+    });
+
+    const refreshToken = jwt.sign(session, this._REFRESH_SECRET, {
+      expiresIn: 604800, // 7 days
+    });
+  
+      return res.status(200).json({ token: token, refreshToken: refreshToken, user: {
+        id: userFound._id,
+        name: userFound.name,
+        email: userFound.email,
+        birthday:userFound.birthday,
+        isAdmin: userFound.isAdmin,
+      },
+    });
+    } catch (error) {
+      console.error('Error during signin:', error);
+      return res.status(500).json({ message: 'Internal Server Error' });
     }
   }
   

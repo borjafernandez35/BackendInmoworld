@@ -50,6 +50,7 @@ const _SECRET = 'api+jwt';
 function verifyToken(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         console.log("verifyToken");
+        console.log('la cabecera es:', req.header("x-access-token"));
         const token = req.header("x-access-token");
         if (!token)
             return res.status(403).json({ message: "No token provided" });

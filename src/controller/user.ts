@@ -2,9 +2,16 @@
 import { Request, Response } from 'express';
 import { IUser } from '../user/model';
 import * as userServices from '../user/service';
-//import bcrypt from 'bcryptjs'; // Solo importa bcrypt una vez aquí
+import * as crypto from 'crypto';
+import * as jwt from 'jsonwebtoken';
+import IJwtPayload from '../middlewares/JWTPayload';
 
 export class userController {
+
+  private _SECRET: string = 'api+jwt';
+
+  refreshTokenSecret = crypto.randomBytes(64).toString('hex');
+  private _REFRESH_SECRET: string = this.refreshTokenSecret;
 
   public async getAll(req: Request, res: Response) {
     try {
@@ -57,54 +64,84 @@ export class userController {
     }
   }
 
-  
-  
-
- /*  public async login(req: Request, res: Response) {
+  public async createUserGoogle(req: Request, res: Response) {
     try {
-        // Verificar si se proporcionaron los campos requeridos
-        if (req.body.username && req.body.password) {
-            const user_filter = req.body.username;
-            const user_data = await userServices.getEntries.findByName(user_filter);
+      if (
+        req.body.name &&
+        req.body.email &&
+        req.body.password &&
+        req.body.birthday
+        
+      ) {
 
-            if (user_data) {
-                const inputPassword = req.body.password.trim();
-                const storedHash = user_data.password.trim();
-                console.log('Comparando inputPassword y storedHash...');
-                console.log('inputPassword (longitud):', inputPassword.length, 'Contenido:', inputPassword);
-                console.log('storedHash (longitud):', storedHash.length, 'Contenido:', storedHash);
+        console.log("estoy en register!!!!:",req.body.name);
 
-                const isPasswordValid = await bcrypt.compare(inputPassword, storedHash);
-                console.log('Resultado de bcrypt.compare:', isPasswordValid);
-
-                if (!isPasswordValid) {
-                    // Verificar si es el usuario Admin
-                    if (user_data.name === 'Admin' && inputPassword === 'Administrador') {
-                        return res.status(200).json({ data: user_data, message: 'Admin' });
-                    } else {
-                      return res.status(401).json({ message: 'Error, wrong username or password' });
-                    }
-                } else {
-                  return res.status(201).json({ data: user_data, message: 'Login Successful' });
-                }
-            } else {
-                return res.status(404).json({ message: 'User not found' });
-            }
-        } else {
-            return res.status(400).json({ message: 'Missing fields' });
+        if (typeof req.body.password !== 'string') {
+          throw new Error('Invalid password');
         }
+      const password = await userServices.getEntries.encryptPassword(req.body.password);
+        const user_params: IUser = {
+          
+          name: req.body.name,
+          email: req.body.email,
+          birthday: req.body.birthday,
+          isAdmin: false,
+          password: password
+        };
+        const user_data = await userServices.getEntries.createUserGoogle(user_params);
+        const email = req.body.email;
+        const userFound = await userServices.getEntries.filterUserEmail(email);
+
+        if (!userFound) {
+          return res.status(404).json({ message: 'User Not Found' });
+        }
+
+        const session = { id: userFound._id, isAdmin:userFound.isAdmin } as IJwtPayload;
+
+    const token = jwt.sign(session, this._SECRET, {
+      expiresIn: 86400,
+    });
+
+    const refreshToken = jwt.sign(session, this._REFRESH_SECRET, {
+      expiresIn: 604800, // 7 days
+    });
+
+
+
+        return res
+          .status(201)
+          .json({ message: 'User created successfully', user: user_data,token: token, refreshToken: refreshToken, id: userFound._id });
+
+      } else {
+        return res.status(400).json({ error: 'Missing fields' });
+      }
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Internal server error' });
+      console.log('error', error);
+      return res.status(500).json({ error: 'Internal server error' });
     }
-} */
+  }
+
+  
+  public async checkEmailExists(req: Request, res: Response) {
+    try {
+      const email = req.params.email; // Obtener el correo electrónico de los parámetros de la solicitud
+      const isEmailRegistered = await userServices.getEntries.checkEmailExists(email);
+
+      console.log('el isemailregistered es:',isEmailRegistered);
+  
+      return res.status(200).json({ isEmailRegistered });
+    } catch (error) {
+      console.error('Error checking email:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 
   
 
 public async register(req: Request, res: Response) {
   try {
-    console.log("REGiiisssSTERRRRRRR:",req.body.name,req.body.email,req.body.password,req.body.isAdmin)
-      if (req.body.name && req.body.email && req.body.password) {
+    console.log("REGiiisssSTERRRRRRR:",req.body.name,req.body.email,req.body.password,req.body.isAdmin, req.body.birthday)
+      if (req.body.name && req.body.email && req.body.password && req.body.birthday) {
 
         console.log("estoy en register!!!!:",req.body.name);
 
@@ -120,7 +157,8 @@ public async register(req: Request, res: Response) {
               name: req.body.name,
               email: req.body.email,
               password:password,  // Guarda la contraseña en texto claro y deja que el middleware la cifre
-              isAdmin:req.body.isAdmin
+              isAdmin:req.body.isAdmin,
+              birthday:req.body.birthday
           };
 
           const user_data = await userServices.getEntries.create(user_params);
@@ -147,7 +185,8 @@ public async register(req: Request, res: Response) {
         const user_params: IUser = {
           name: req.body.name || user_data.name,
           email: req.body.email || user_data.email,
-          password: req.body.password || user_data.password
+          password: req.body.password || user_data.password,
+          birthday:req.body.birthday || user_data.birthday
         };
 
         await userServices.getEntries.updateUser(user_params, { _id: req.params.id });
