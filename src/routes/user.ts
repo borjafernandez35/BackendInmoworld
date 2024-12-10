@@ -29,12 +29,16 @@ router.post('/register', async(req, res) => {
     user_controller.register(req, res)
 })
 
-router.put('/:id',verifyToken,validateUserOrAdmin, async (req, res) => {
+router.put('/:id',verifyToken, validateUserOrAdmin, async (req, res) => {
     user_controller.updateUser(req, res);
 })
 
-router.delete('/:id',verifyToken,validateUserOrAdmin, async(req, res) => {
+router.delete('/:id',verifyToken, validateUserOrAdmin, async(req, res) => {
     user_controller.deleteUser(req, res);
+})
+
+router.get('/chats/:id', verifyToken, async (req, res) => {
+    user_controller.chatStartup(req, res);
 })
 
 /* router.delete('/delParticipant/:idUser/:idExp', async(req, res) => {

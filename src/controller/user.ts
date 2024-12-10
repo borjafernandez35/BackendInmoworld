@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { Request, Response } from 'express';
 import { IUser } from '../user/model';
+import ChatSchema from '../chat(Socketio)/schema';
 import * as userServices from '../user/service';
 //import bcrypt from 'bcryptjs'; // Solo importa bcrypt una vez aquí
 
@@ -169,6 +170,28 @@ public async register(req: Request, res: Response) {
       return user ? res.status(201).json({ user, message: 'Deleted' }) : res.status(404).json({ message: 'not found' });
     } catch (error) {
       return res.status(500).json({ error });
+    }
+  }
+
+  public async chatStartup(req: Request, res: Response) {
+    try {
+      console.log('entramos en chatstartup')
+      const userId = req.params.id;
+      const chats = await ChatSchema.find({
+        $or: [
+          { receiver: userId, },
+          { sender: userId },
+        ],
+      }).exec()
+      if (!chats) {
+        console.log('No se han encontrado chats :(')
+        return res.status(404).json({ message: 'Messages not found'})
+      } else {
+        console.log('Los chats', chats)
+        return res.status(201).json({chats})
+      }
+    } catch (error) {
+      return res.status(500).json({ error })
     }
   }
 }
