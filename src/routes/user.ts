@@ -37,7 +37,8 @@ router.delete('/:id',verifyToken, validateUserOrAdmin, async(req, res) => {
     user_controller.deleteUser(req, res);
 })
 
-router.get('/chats/:id', verifyToken, async (req, res) => {
+router.get('/chats/guarda/usuarios/:id', verifyToken, async (req, res) => {
+    console.log('ESTOY EN EL CHAT PARA GUARDAR!!!!!!');
     user_controller.chatStartup(req, res);
 })
 

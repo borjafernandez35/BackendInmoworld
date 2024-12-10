@@ -176,7 +176,7 @@ public async register(req: Request, res: Response) {
   public async chatStartup(req: Request, res: Response) {
     try {
       console.log('entramos en chatstartup')
-      const userId = req.params.id;
+      const userId = req.userId;
       const chats = await ChatSchema.find({
         $or: [
           { receiver: userId, },
