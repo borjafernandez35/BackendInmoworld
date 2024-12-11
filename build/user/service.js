@@ -69,6 +69,23 @@ exports.getEntries = {
             throw error;
         }
     }),
+    createUserGoogle: (user_params) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            // Verificar si ya existe un usuario con el mismo correo electrónico
+            const existingUser = yield schema_1.default.findOne({ email: user_params.email });
+            if (existingUser) {
+                throw new Error('User with this email already exists');
+            }
+            // Si no existe, proceder con la creación del usuario
+            const session = new schema_1.default(user_params);
+            const result = yield session.save();
+            const newUser = Object.assign(Object.assign({}, result.toObject()), { _id: result._id });
+            return newUser;
+        }
+        catch (error) {
+            throw error;
+        }
+    }),
     update: (id, body) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(body);
         return yield schema_1.default.findByIdAndUpdate(id, body, { $new: true });

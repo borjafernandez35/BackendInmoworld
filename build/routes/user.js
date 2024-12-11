@@ -20,18 +20,25 @@ const authJWT_1 = require("../middlewares/authJWT");
 //import toNewUser from '../extras/utils'
 const router = express_1.default.Router();
 const user_controller = new user_1.userController();
-router.get('/:page/:limit', authJWT_1.verifyToken, (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    user_controller.getAll(_req, res);
+router.get('/:page/:limit', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('ESTOY EN EL GET ALLL DE LA RUUUUTTTAASSS!!!!', req);
+    console.log('el reeeeeessssss eeeeessssss...:', res);
+    user_controller.getAll(req, res);
 }));
-router.get('/:id', authJWT_1.verifyToken, authJWT_1.validateUserOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('ESTOY EN EL GET IIIIDDDDDD DE LAS RUTAS!!!!!!');
     user_controller.getUser(req, res);
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     user_controller.register(req, res);
 }));
-/* router.post('/login', async(req, res) => {
-    user_controller.login(req, res)
-}) */
+router.post('/google', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    user_controller.createUserGoogle(req, res);
+}));
+router.get('/check/email/:email', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('ESTOY EN EL CHEEECCCKKKK EMAILLLLLL');
+    user_controller.checkEmailExists(req, res);
+}));
 router.post('/register', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     user_controller.register(req, res);
 }));

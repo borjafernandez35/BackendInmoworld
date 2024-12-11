@@ -9,21 +9,29 @@ import {verifyToken, validateUserOrAdmin} from '../middlewares/authJWT'
 const router = express.Router()
 const user_controller: userController = new userController();
 
-router.get('/:page/:limit',verifyToken, async(_req, res) => {
-    user_controller.getAll(_req, res);
+router.get('/:page/:limit', async(req, res) => {
+    console.log('ESTOY EN EL GET ALLL DE LA RUUUUTTTAASSS!!!!',req);
+    console.log('el reeeeeessssss eeeeessssss...:',res);
+    user_controller.getAll(req, res);
 })
 
-router.get('/:id',verifyToken,validateUserOrAdmin, async(req, res) => {
+ router.get('/:id', async(req, res) => {
+    console.log('ESTOY EN EL GET IIIIDDDDDD DE LAS RUTAS!!!!!!');
     user_controller.getUser(req, res);
-})
+}) 
 
 router.post('/', async(req, res) => {
     user_controller.register(req, res);
 })
 
-/* router.post('/login', async(req, res) => {
-    user_controller.login(req, res)
-}) */
+router.post('/google', async (req, res) => {
+    user_controller.createUserGoogle(req, res);
+  })
+
+  router.get('/check/email/:email', async (req, res) => {
+    console.log('ESTOY EN EL CHEEECCCKKKK EMAILLLLLL');
+    user_controller.checkEmailExists(req, res);
+  })
 
 router.post('/register', async(req, res) => {
     user_controller.register(req, res)

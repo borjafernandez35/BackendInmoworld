@@ -29,6 +29,7 @@ const schema = new mongoose_1.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
+    birthday: { type: Date, required: true },
     isAdmin: { type: Boolean, default: false },
     property: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'property', required: false }]
 });

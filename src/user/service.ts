@@ -34,6 +34,27 @@ export const getEntries = {
         throw error;
       }
     },
+
+    createUserGoogle: async (user_params: IUser)=> {
+      try {
+        // Verificar si ya existe un usuario con el mismo correo electrónico
+        const existingUser = await user.findOne({ email: user_params.email });
+        if (existingUser) {
+          throw new Error('User with this email already exists');
+        }
+    
+        // Si no existe, proceder con la creación del usuario
+        const session = new user(user_params);
+           
+        const result = await session.save();
+        const newUser: IUser = { ...result.toObject(), _id: result._id };
+        return newUser;
+      } catch (error) {
+        throw error;
+      }
+    },
+
+
     update: async(id:string,body:object)=>{
         console.log(body);
         return await user.findByIdAndUpdate(id,body,{$new:true});

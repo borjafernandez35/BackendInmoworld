@@ -14,6 +14,7 @@ const _SECRET: string = 'api+jwt';
   
 export async function verifyToken (req: Request, res: Response, next: NextFunction) {
     console.log("verifyToken");
+    console.log('la cabecera es:',req.header("x-access-token"));
     
     const token = req.header("x-access-token");
     if (!token) return res.status(403).json({ message: "No token provided" });

@@ -21,6 +21,10 @@ const authController = new authController_1.AuthController();
 router.post('/signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     authController.signIn(req, res);
 }));
+router.post('/signin/google', (req, res) => {
+    console.log('ESTOY EN EL LOGINNN DE GOOGLEEEEE!!!!!');
+    authController.signingooggle(req, res);
+});
 // Ruta para refrescar el token
 router.post('/refresh-token', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     authController.refreshToken(req, res);
