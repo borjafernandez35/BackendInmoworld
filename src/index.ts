@@ -1,7 +1,7 @@
 /* eslint-disable */
 import express, { RequestHandler } from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
+//import dotenv from 'dotenv';
 import userRouter from './routes/user';
 import authRouter from './routes/auth';
 import propertyRouter from './routes/property';
@@ -9,7 +9,7 @@ import reviewRouter from './routes/review';
 import { run } from './database/mongo_conn';
 import initializeSocket from './routes/chat';
 
-dotenv.config();
+//dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json() as RequestHandler);
 
 // Utilizar el puerto desde la variable de entorno o establecer un valor predeterminado
-const PORT = process.env.PORT;
+const PORT = 3000;
 
 app.get('/ping', (_req, res) => {
     console.log('ping recibido correctamente');

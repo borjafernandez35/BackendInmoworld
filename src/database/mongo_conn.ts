@@ -1,14 +1,16 @@
 /* eslint-disable */
-import { connect, connection } from 'mongoose';
+ import { connect, connection } from 'mongoose';
 import dotenv from 'dotenv';
 
 // Cargar las variables de entorno
 dotenv.config();
 
 export async function run() {
-    const mongoURI = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_INITDB_DATABASE}`;
+   
 
-    await connect(mongoURI)
+   
+
+    await connect('mongodb://localhost:27017/InmoWorld')
         .then(() => {
             console.log('Database connected!!');
         })
@@ -19,4 +21,4 @@ export async function run() {
 
 export function endConn() {
     connection.close();
-}
+} 

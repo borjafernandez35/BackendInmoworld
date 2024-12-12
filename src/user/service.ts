@@ -29,7 +29,7 @@ export const getEntries = {
 
     create: async (entry: IUser) => {
       try {
-      return await user.create(entry); // El hash de la contraseña se maneja en el middleware del modelo
+      return await user.create(entry); 
       } catch (error) {
         throw error;
       }
