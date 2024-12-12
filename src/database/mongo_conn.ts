@@ -1,50 +1,22 @@
-import { connect, connection } from 'mongoose'
 /* eslint-disable */
-//const mongoose = require ('mongoose')
-//import mongoose from 'mongoose';
+import { connect, connection } from 'mongoose';
+import dotenv from 'dotenv';
 
-//const connectionString = 'mongodb://localhost:27017/Prueba_1'
+// Cargar las variables de entorno
+dotenv.config();
+
 export async function run() {
-    await connect('mongodb://localhost:27017/InmoWorld')
-    .then(()=>{
-        console.log('Database connected!!')
-    }) .catch((err)=>{
-        console.error(err)
-    });
+    const mongoURI = `mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_INITDB_DATABASE}`;
 
-} 
+    await connect(mongoURI)
+        .then(() => {
+            console.log('Database connected!!');
+        })
+        .catch((err) => {
+            console.error('Error connecting to database:', err);
+        });
+}
+
 export function endConn() {
-    connection.close()
-};
-/*
-const usersSchema = new Schema<UsersInterface>({
-    id: Number,
-    name: String,
-    mail: String,
-    password: String,
-    comment: String
-})
-
-const usersofDB = model<UsersInterface>('user',usersSchema)*/
-
-/*const user1 = new users({
-    id: 6,
-    name: 'Gerard',
-    mail: 'Derivia',
-    password: 'Ignis',
-    comment: 'No le caen bien los caballeros'
-})
-user1.save().then((result)=>{
-    console.log(result)
-    }) .catch((err)=>{
-    console.error(err)
-    });*/
-
-/*
-usersofDB.find({}).then((result:any)=> {
-    run();
-    console.log(result)
-    connection.close()
-})
-
-export default usersofDB;*/
+    connection.close();
+}
