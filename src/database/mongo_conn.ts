@@ -1,9 +1,5 @@
 /* eslint-disable */
  import { connect, connection } from 'mongoose';
-import dotenv from 'dotenv';
-
-// Cargar las variables de entorno
-dotenv.config();
 
 export async function run() {
    

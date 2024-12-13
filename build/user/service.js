@@ -62,8 +62,9 @@ exports.getEntries = {
         return bcrypt.compare(password, person);
     },
     create: (entry) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log('ccrrrrrrreeeeeeaaaattteeeeeeeee:', entry);
         try {
-            return yield schema_1.default.create(entry); // El hash de la contraseña se maneja en el middleware del modelo
+            return yield schema_1.default.create(entry);
         }
         catch (error) {
             throw error;

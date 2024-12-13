@@ -1,9 +1,9 @@
 /* eslint-disable */
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 export interface IChat  extends Document {
-    receiver: string;
-    sender: string;
+    receiver: mongoose.Types.ObjectId;
+    sender: mongoose.Types.ObjectId;
     message: string;
     date: Date;
   }
