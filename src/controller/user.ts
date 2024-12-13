@@ -151,6 +151,8 @@ public async register(req: Request, res: Response) {
       }
     const password = await userServices.getEntries.encryptPassword(req.body.password);
 
+    console.log('El password es!!!!!!!!!!!!!!:',password);
+
   
 
 
@@ -163,6 +165,8 @@ public async register(req: Request, res: Response) {
           };
 
           const user_data = await userServices.getEntries.create(user_params);
+
+          console.log('eeeeellllll user data es!!!!!!!!:',user_data);
           return res.status(201).json({ message: 'User registered successfully', user: user_data });
       } else {
           return res.status(400).json({ error: 'Missing fields' });

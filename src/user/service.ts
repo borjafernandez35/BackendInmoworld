@@ -28,6 +28,7 @@ export const getEntries = {
     },
 
     create: async (entry: IUser) => {
+      console.log('ccrrrrrrreeeeeeaaaattteeeeeeeee:',entry);
       try {
       return await user.create(entry); 
       } catch (error) {

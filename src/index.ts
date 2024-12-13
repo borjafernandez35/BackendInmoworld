@@ -34,5 +34,4 @@ app.use('/auth', authRouter);
 const server = app.listen(PORT, () => {
     console.log('el servidor está escuchando en el puerto ' + PORT);
 });
-
 initializeSocket(server);
