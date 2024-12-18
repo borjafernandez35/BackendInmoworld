@@ -37,28 +37,106 @@ const socketService = (io) => {
             console.log("Entra en message ", chatSchema);
             socket.broadcast.to("some room").emit('message-receive', chatSchema);
         }));
+        /* socket.on('sendMessage', async (data: string) => {
+          try {
+            const parsedData = JSON.parse(data);
+
+            console.log('ESTAMOS EN SEND MESSAGE!!!!!!');
+        
+            const chat = new ChatSchema({
+              receiver: parsedData.receiver, // Usa el ID del socket como usuario
+              sender: parsedData.sender,
+              message: parsedData.message,
+              date: parsedData.timestamp
+            });
+        
+            // Guarda en la base de datos
+            await chat.save();
+            console.log('Mensaje guardado en la base de datos:', chat);
+        
+            // Reenvía el mensaje
+            socket.broadcast.to(parsedData.receiverId).emit('message-receive', {
+              receiver: chat.receiver,
+              sender: socket.id,
+              message: chat.message,
+              timestamp: chat.date,
+            });
+          // Emitir notificación de nuevo mensaje al receptor
+            socket.broadcast.to(parsedData.receiver).emit('new-message', {
+            sender: parsedData.sender,
+            message: parsedData.message,
+            });
+
+
+          } catch (error) {
+            console.error('Error procesando el mensaje:', error);
+          }
+        }); */
+        // Evento para enviar mensajes
         socket.on('sendMessage', (data) => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const parsedData = JSON.parse(data);
                 const chat = new schema_1.default({
-                    receiver: parsedData.receiver, // Usa el ID del socket como usuario
+                    receiver: parsedData.receiver,
                     sender: parsedData.sender,
                     message: parsedData.message,
-                    date: parsedData.timestamp
+                    date: parsedData.timestamp,
                 });
-                // Guarda en la base de datos
+                // Guardar mensaje en la base de datos
                 yield chat.save();
-                console.log('Mensaje guardado en la base de datos:', chat);
-                // Reenvía el mensaje
-                socket.broadcast.to(parsedData.receiverId).emit('message-receive', {
+                // Reenviar mensaje al receptor
+                io.to(parsedData.receiverId).emit('message-receive', {
                     receiver: chat.receiver,
-                    sender: socket.id,
+                    sender: chat.sender,
                     message: chat.message,
                     timestamp: chat.date,
+                });
+                // Emitir notificación de nuevo mensaje
+                io.to(parsedData.receiverId).emit('new-message', {
+                    sender: parsedData.sender,
+                    message: parsedData.message,
                 });
             }
             catch (error) {
                 console.error('Error procesando el mensaje:', error);
+            }
+        }));
+        // Evento para cargar mensajes históricos
+        socket.on('load-messages', (userId) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const messages = yield schema_1.default.find({
+                    $or: [{ sender: userId }, { receiver: userId }],
+                }).sort({ date: -1 });
+                socket.emit('load-messages-response', messages);
+            }
+            catch (error) {
+                console.error('Error al cargar mensajes:', error);
+                socket.emit('error', { message: 'Error al cargar mensajes' });
+            }
+        }));
+        // Evento para marcar mensajes como leídos
+        socket.on('mark-as-read', (_a) => __awaiter(void 0, [_a], void 0, function* ({ userId, senderId }) {
+            try {
+                yield schema_1.default.updateMany({ receiver: userId, sender: senderId, read: false }, { $set: { read: true } });
+                socket.emit('mark-as-read-success');
+            }
+            catch (error) {
+                console.error('Error al marcar mensajes como leídos:', error);
+                socket.emit('error', { message: 'Error al marcar mensajes' });
+            }
+        }));
+        // Evento para contar mensajes no leídos
+        socket.on('unread-count', (userId) => __awaiter(void 0, void 0, void 0, function* () {
+            try {
+                const unreadCount = yield schema_1.default.countDocuments({
+                    receiver: userId,
+                    read: false,
+                });
+                socket.emit('unread-count-response', { unreadCount });
+            }
+            catch (error) {
+                console.error('Error al contar mensajes no leídos:', error);
+                socket.emit('error', { message: 'Error al contar mensajes' });
             }
         }));
     });

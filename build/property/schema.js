@@ -27,7 +27,7 @@ exports.schema = void 0;
 /* eslint-disable */
 const mongoose_1 = __importStar(require("mongoose"));
 exports.schema = new mongoose_1.Schema({
-    owner: { type: mongoose_1.Schema.Types.ObjectId, ref: 'user' },
+    owner: { type: mongoose_1.Schema.Types.ObjectId, ref: 'user', required: true },
     address: { type: String, required: false },
     description: { type: String, required: false },
     //rating: {type: Number, required: false},

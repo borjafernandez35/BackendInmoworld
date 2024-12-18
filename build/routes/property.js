@@ -36,10 +36,10 @@ router.post('/:id', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 
     const data = await experienciasServices.getEntries.addParticipant(req.params.idExp,req.params.idPart)
     return res.json(data);
 }) */
-router.put('/:id', authJWT_1.verifyToken, authJWT_1.isOwner, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put('/:id', authJWT_1.verifyToken, authJWT_1.isOwnerorAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     property_controller.updateProperty(req, res);
 }));
-router.delete('/:id', authJWT_1.verifyToken, authJWT_1.AdminValidation || authJWT_1.isOwner, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authJWT_1.verifyToken, authJWT_1.isOwnerorAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     property_controller.deleteProperty(req, res);
 }));
 /* router.delete('/delParticipant/:idExp/:idPart', async(req, res) => {

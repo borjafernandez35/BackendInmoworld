@@ -1,7 +1,7 @@
 /* eslint-disable */
 import express from 'express';
 import {propertyController} from '../controller/property';
-import {verifyToken,isOwner,AdminValidation} from '../middlewares/authJWT'
+import {verifyToken, isOwnerorAdmin} from '../middlewares/authJWT'
 
 
 
@@ -31,11 +31,11 @@ router.post('/:id', verifyToken, async(req, res) => {
     return res.json(data);
 }) */
 
-router.put('/:id',verifyToken,isOwner, async(req, res) => {
+router.put('/:id',verifyToken,isOwnerorAdmin, async(req, res) => {
     property_controller.updateProperty(req, res);
 })
 
-router.delete('/:id',verifyToken,AdminValidation||isOwner, async(req, res) => {
+router.delete('/:id',verifyToken,isOwnerorAdmin, async(req, res) => {
     property_controller.deleteProperty(req, res);
 })
 

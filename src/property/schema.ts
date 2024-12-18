@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 import { IProperty } from './model'
 
 export const schema = new Schema<IProperty>({
-    owner: {type: Schema.Types.ObjectId, ref:'user'},
+    owner: {type: Schema.Types.ObjectId, ref:'user', required: true},
     address: {type: String, required: false},
     description: {type: String, required: false},
     //rating: {type: Number, required: false},
