@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable */
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const chats_1 = __importDefault(require("./routes/chats"));
 const user_1 = __importDefault(require("./routes/user"));
 const auth_1 = __importDefault(require("./routes/auth"));
 const property_1 = __importDefault(require("./routes/property"));
@@ -17,7 +18,8 @@ app.use(express_1.default.json());
 (0, mongo_conn_1.run)();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-const PORT = 3001;
+// Utilizar el puerto desde la variable de entorno o establecer un valor predeterminado
+const PORT = 3000;
 app.get('/ping', (_req, res) => {
     console.log('ping recibido correctamente');
     res.send('pinged');
@@ -26,7 +28,8 @@ app.use('/user', user_1.default);
 app.use('/property', property_1.default);
 app.use('/review', review_1.default);
 app.use('/auth', auth_1.default);
+app.use('/chats', chats_1.default);
 const server = app.listen(PORT, () => {
-    console.log('el servidor esta escuchando en el puerto ' + PORT);
+    console.log('el servidor está escuchando en el puerto ' + PORT);
 });
 (0, chat_1.default)(server);

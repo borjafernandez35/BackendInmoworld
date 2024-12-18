@@ -9,13 +9,13 @@ import {verifyToken, validateUserOrAdmin} from '../middlewares/authJWT'
 const router = express.Router()
 const user_controller: userController = new userController();
 
-router.get('/:page/:limit', async(req, res) => {
+router.get('/:page/:limit',verifyToken, async(req, res) => {
     console.log('ESTOY EN EL GET ALLL DE LA RUUUUTTTAASSS!!!!',req);
     console.log('el reeeeeessssss eeeeessssss...:',res);
     user_controller.getAll(req, res);
 })
 
- router.get('/:id', async(req, res) => {
+ router.get('/:id',verifyToken, async(req, res) => {
     console.log('ESTOY EN EL GET IIIIDDDDDD DE LAS RUTAS!!!!!!');
     user_controller.getUser(req, res);
 }) 

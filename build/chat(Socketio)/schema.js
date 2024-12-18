@@ -23,9 +23,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable */
 const mongoose_1 = __importStar(require("mongoose"));
 const chatSchema = new mongoose_1.Schema({
-    user: { type: String, required: true },
+    receiver: { type: mongoose_1.Schema.Types.ObjectId, ref: 'user', required: true },
+    sender: { type: mongoose_1.Schema.Types.ObjectId, ref: 'user', required: true },
     message: { type: String, required: true },
     date: { type: Date, default: Date.now }
 });

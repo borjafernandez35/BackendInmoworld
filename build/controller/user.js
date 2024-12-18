@@ -31,8 +31,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
+const schema_1 = __importDefault(require("../chat(Socketio)/schema"));
 const userServices = __importStar(require("../user/service"));
 const crypto = __importStar(require("crypto"));
 const jwt = __importStar(require("jsonwebtoken"));
@@ -164,6 +168,7 @@ class userController {
                         throw new Error('Invalid password');
                     }
                     const password = yield userServices.getEntries.encryptPassword(req.body.password);
+                    console.log('El password es!!!!!!!!!!!!!!:', password);
                     const user_params = {
                         name: req.body.name,
                         email: req.body.email,
@@ -172,6 +177,7 @@ class userController {
                         birthday: req.body.birthday
                     };
                     const user_data = yield userServices.getEntries.create(user_params);
+                    console.log('eeeeellllll user data es!!!!!!!!:', user_data);
                     return res.status(201).json({ message: 'User registered successfully', user: user_data });
                 }
                 else {
@@ -217,6 +223,31 @@ class userController {
                 const userId = req.params.id;
                 const user = yield userServices.getEntries.delete(userId);
                 return user ? res.status(201).json({ user, message: 'Deleted' }) : res.status(404).json({ message: 'not found' });
+            }
+            catch (error) {
+                return res.status(500).json({ error });
+            }
+        });
+    }
+    chatStartup(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log('entramos en chatstartup');
+                const userId = req.params.id;
+                const chats = yield schema_1.default.find({
+                    $or: [
+                        { receiver: userId, },
+                        { sender: userId },
+                    ],
+                }).exec();
+                if (!chats) {
+                    console.log('No se han encontrado chats :(');
+                    return res.status(404).json({ message: 'Messages not found' });
+                }
+                else {
+                    console.log('Los chats', chats);
+                    return res.status(201).json({ chats });
+                }
             }
             catch (error) {
                 return res.status(500).json({ error });

@@ -8,23 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.run = run;
-exports.endConn = endConn;
 /* eslint-disable */
-const mongoose_1 = require("mongoose");
-function run() {
-    return __awaiter(this, void 0, void 0, function* () {
-        //await connect('mongodb://localhost:27017/InmoWorld')
-        yield (0, mongoose_1.connect)('mongodb://mongodb:27017/InmoWorld')
-            .then(() => {
-            console.log('Database connected!!');
-        })
-            .catch((err) => {
-            console.error('Error connecting to database:', err);
-        });
-    });
-}
-function endConn() {
-    mongoose_1.connection.close();
-}
+const express_1 = __importDefault(require("express"));
+const user_1 = require("../controller/user");
+const authJWT_1 = require("../middlewares/authJWT");
+/* eslint-disable */
+//import toNewUser from '../extras/utils'
+const router = express_1.default.Router();
+const user_controller = new user_1.userController();
+router.get('/:id', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    user_controller.chatStartup(req, res);
+}));
+exports.default = router;

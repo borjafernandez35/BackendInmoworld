@@ -8,7 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+const schema_1 = __importDefault(require("./schema"));
 const connectedUser = new Set();
 const socketService = (io) => {
     io.on('connection', (socket) => {
@@ -30,16 +34,32 @@ const socketService = (io) => {
                 date: new Date(), // Asigna la fecha actual
                 message: data // Asigna el mensaje
             };
-            console.log(chatSchema);
+            console.log("Entra en message ", chatSchema);
             socket.broadcast.to("some room").emit('message-receive', chatSchema);
         }));
         socket.on('sendMessage', (data) => __awaiter(void 0, void 0, void 0, function* () {
-            const chatSchema = {
-                date: new Date(), // Asigna la fecha actual
-                message: data // Asigna el mensaje
-            };
-            console.log(chatSchema);
-            socket.broadcast.to("some room").emit('message-receive', chatSchema); // Envía el objeto chat
+            try {
+                const parsedData = JSON.parse(data);
+                const chat = new schema_1.default({
+                    receiver: parsedData.receiver, // Usa el ID del socket como usuario
+                    sender: parsedData.sender,
+                    message: parsedData.message,
+                    date: parsedData.timestamp
+                });
+                // Guarda en la base de datos
+                yield chat.save();
+                console.log('Mensaje guardado en la base de datos:', chat);
+                // Reenvía el mensaje
+                socket.broadcast.to(parsedData.receiverId).emit('message-receive', {
+                    receiver: chat.receiver,
+                    sender: socket.id,
+                    message: chat.message,
+                    timestamp: chat.date,
+                });
+            }
+            catch (error) {
+                console.error('Error procesando el mensaje:', error);
+            }
         }));
     });
 };

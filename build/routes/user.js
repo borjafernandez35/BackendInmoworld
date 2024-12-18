@@ -20,12 +20,12 @@ const authJWT_1 = require("../middlewares/authJWT");
 //import toNewUser from '../extras/utils'
 const router = express_1.default.Router();
 const user_controller = new user_1.userController();
-router.get('/:page/:limit', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:page/:limit', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('ESTOY EN EL GET ALLL DE LA RUUUUTTTAASSS!!!!', req);
     console.log('el reeeeeessssss eeeeessssss...:', res);
     user_controller.getAll(req, res);
 }));
-router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get('/:id', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log('ESTOY EN EL GET IIIIDDDDDD DE LAS RUTAS!!!!!!');
     user_controller.getUser(req, res);
 }));
@@ -47,6 +47,9 @@ router.put('/:id', authJWT_1.verifyToken, authJWT_1.validateUserOrAdmin, (req, r
 }));
 router.delete('/:id', authJWT_1.verifyToken, authJWT_1.validateUserOrAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     user_controller.deleteUser(req, res);
+}));
+router.get('/chats/:id', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    user_controller.chatStartup(req, res);
 }));
 /* router.delete('/delParticipant/:idUser/:idExp', async(req, res) => {
     const data = await userServices.getEntries.delExperience(req.params.idUser,req.params.idExp)

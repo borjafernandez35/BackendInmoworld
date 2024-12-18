@@ -1,7 +1,7 @@
 /* eslint-disable */
 import express, { RequestHandler } from 'express';
 import cors from 'cors';
-//import dotenv from 'dotenv';
+import chatRouter from './routes/chats';
 import userRouter from './routes/user';
 import authRouter from './routes/auth';
 import propertyRouter from './routes/property';
@@ -9,7 +9,6 @@ import reviewRouter from './routes/review';
 import { run } from './database/mongo_conn';
 import initializeSocket from './routes/chat';
 
-//dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -30,9 +29,9 @@ app.use('/user', userRouter);
 app.use('/property', propertyRouter);
 app.use('/review', reviewRouter);
 app.use('/auth', authRouter);
+app.use('/chats', chatRouter);
 
 const server = app.listen(PORT, () => {
     console.log('el servidor está escuchando en el puerto ' + PORT);
 });
-
 initializeSocket(server);
