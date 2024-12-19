@@ -2,6 +2,7 @@
 import { Request, Response } from 'express'
 import { IProperty } from '../property/model'
 import * as propertiesServices from '../property/service'
+import * as userServices from '../user/service'
 //import * as usersServices from '../user/service';
 
 
@@ -52,6 +53,36 @@ export class propertyController {
             console.log("funciona get all");
             //const activity_filter = {};
             const property_data = await propertiesServices.getEntries.getAll();
+            let total=property_data.length;
+            const page = Number(req.params.page); // Convertir a número
+            const limit = Number(req.params.limit); // Convertir a número
+           
+            const startIndex = (page - 1) * limit;
+            const endIndex = page * limit;
+            let totalPages= Math.ceil(total/limit);
+    
+            
+            const resultProperty = property_data.slice(startIndex, endIndex);
+            console.log(resultProperty, totalPages,total);
+            return res.status(200).json({properties:resultProperty,totalPages:totalPages,totalActivity:total});
+            
+        } catch (error) {
+            
+            console.error('Error en la solicitud:', error);
+            return res.status(500).json({ message: 'Error interno del servidor' });
+        }
+    }
+
+    public async getByName(req: Request, res: Response) {
+        try {
+            console.log("funciona get by name");
+            const user_filter = { _id: req.params.id };
+            const user_data = await userServices.getEntries.filterUser(user_filter);
+            const property_data = await propertiesServices.getEntries.getByName(user_data, parseInt(req.params.distance, 10), req.params.search);
+            if (!property_data || property_data.length === 0) {
+                // Si no hay propiedades, retorna una respuesta vacía
+                return res.status(200).json({ properties: [], totalPages: 0, totalActivity: 0 });
+            }
             let total=property_data.length;
             const page = Number(req.params.page); // Convertir a número
             const limit = Number(req.params.limit); // Convertir a número

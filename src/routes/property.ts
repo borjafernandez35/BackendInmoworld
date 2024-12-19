@@ -39,6 +39,10 @@ router.delete('/:id',verifyToken,isOwnerorAdmin, async(req, res) => {
     property_controller.deleteProperty(req, res);
 })
 
+router.get('/activityByName/:page/:limit/:id/:distance/:search', (req, res) => {
+   property_controller.getByName(req, res);
+  })
+
 /* router.delete('/delParticipant/:idExp/:idPart', async(req, res) => {
     const data = await experienciasServices.getEntries.delParticipant(req.params.idExp,req.params.idPart)
     return res.json(data);

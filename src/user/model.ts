@@ -13,4 +13,10 @@ export interface IUser {
     //comment: string,
     isAdmin?: boolean; 
    property?: mongoose.Types.ObjectId[];
+   location?: IPoint;
 }
+
+interface IPoint {
+    type: 'Point';
+    coordinates: [number, number]; // [longitude, latitude]
+  }

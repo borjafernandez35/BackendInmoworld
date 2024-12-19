@@ -6,7 +6,13 @@ export interface IProperty{
     owner: mongoose.Types.ObjectId,
     address: string,
     description?: String,
+    location?: IPoint; 
     //rating?: number,
     //coordinate?: [number,number],
     //picture: [string]
 }
+
+interface IPoint {
+    type: 'Point';
+    coordinates: [number, number]; // [longitude, latitude]
+  }

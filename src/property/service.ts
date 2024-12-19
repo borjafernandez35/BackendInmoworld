@@ -2,6 +2,7 @@
 //import { IProperty } from './model';
 import { Types } from 'mongoose';
 import { IProperty } from './model';
+import{IUser}from '../user/model';
 import property from './schema';
 import user from '../user/schema';
 
@@ -69,11 +70,38 @@ export const getEntries = {
         }
     },
 
+
+
     delete: async(id:string)=>{
         await user.updateMany(
             {},
             { $pull: { property: id } },
         );
         return await property.findByIdAndDelete(id);
-    }
+    },
+    
+      getByName: async(user: IUser, distance: number, search: string): Promise<IProperty[] | null>=> {
+        try {
+          const currentDate = new Date();
+          return property.find({
+            location: {
+              $near: {
+                $geometry: {
+                  type: "Point",
+                  coordinates: [user.location?.coordinates[0], user.location?.coordinates[1]] // User's coordinates
+                },
+                $maxDistance: distance // Specify the maximum distance (radius)
+              }
+            },
+            active: true,
+            "name": { "$regex": search, "$options": "i" },
+            date: { $gt: currentDate}
+          }) as unknown as
+            | IProperty[]
+            | null;
+        } catch (error) {
+          console.error('Error en getAll:', error);
+          return null;
+        }
+      }
 }
