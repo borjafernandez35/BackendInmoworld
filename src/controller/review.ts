@@ -5,10 +5,11 @@ import * as reviewServices from '../reviews/service'
 export class reviewController {
     public async createReview(req: Request, res: Response) {
         try {
-            if (req.body.user && req.body.property && req.body.description) {
+            if (req.body.user && req.body.property && req.body.rating && req.body.description) {
                 const review_params: IReview = {
                   user: req.body.user,
                   property: req.body.property,
+                  rating: req.body.rating,
                   description: req.body.description,
                   date: new Date()
                 }
@@ -22,26 +23,23 @@ export class reviewController {
         }
     }
 
-    public async getAll(req: Request, res: Response) {
-        try {
-            const review_data = await reviewServices.getEntries.getAll()
-            const total = review_data.length
-
-            const page = Number(req.params.page)
-            const limit = Number(req.params.limit)
-            const startIndex = (page -1) * limit
-            const endIndex = page*limit
-            const totalPages = Math.ceil(total / limit)
-
-            const resultReview = review_data.slice(startIndex, endIndex)
-
-            return res
-            .status(200)
-            .json({reviews: resultReview, totalPages: totalPages, totalReview: total})
-        } catch (error) {
-            return res.status(500).json({error: 'Error al extraer todas las reviews' })
-        }
-    }
+    public async getAll(_req: Request, res: Response) {
+      try {
+          const review_data = await reviewServices.getEntries.getAll();
+  
+          // Mostrar las reviews en la consola
+          console.log('Reviews obtenidas:', review_data);
+  
+          return res
+              .status(200)
+              .json({ reviews: review_data, totalReview: review_data.length });
+      } catch (error) {
+          console.error('Error al extraer las reviews:', error);
+          return res.status(500).json({ error: 'Error al extraer todas las reviews' });
+      }
+  }
+  
+  
 
     public async getReview(req: Request, res: Response) {
         try {
@@ -72,6 +70,7 @@ export class reviewController {
               const review_params: IReview = {
                 user: req.body.name || review_data.user,
                 property: req.body.property || review_data.property,
+                rating: req.body.rating || review_data.rating,
                 description: req.body.description || review_data.description,
                 date: new Date()
               }

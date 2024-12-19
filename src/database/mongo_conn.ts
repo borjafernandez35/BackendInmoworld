@@ -6,7 +6,7 @@ export async function run() {
     //await connect('mongodb://localhost:27017/InmoWorld')
    
 
-    await connect('mongodb://mongodb:27017/InmoWorld')
+    await connect('mongodb://localhost:27017/InmoWorld')
    
         .then(() => {
             console.log('Database connected!!');
