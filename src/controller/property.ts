@@ -17,7 +17,7 @@ export class propertyController {
                     //rating: 0,
                     description: req.body.description,
                     owner: req.body.owner,
-                    //picture:req.body.picture
+                    picture:req.body.picture,
                     //active: true
                 };
                 const activity_data = await propertiesServices.getEntries.create(activity_params);
@@ -96,7 +96,7 @@ export class propertyController {
                     //rating: req.body.rating,
                     description: req.body.description,
                     owner: req.body.owner,
-                    //picture: req.body.picture
+                    picture: req.body.picture,
                     //active: true
                 };
                 await propertiesServices.getEntries.updateProperty(property_params, property_filter);

@@ -32,6 +32,6 @@ exports.schema = new mongoose_1.Schema({
     description: { type: String, required: false },
     //rating: {type: Number, required: false},
     //coordinate: [{type: Number, required: false}],
-    //picture:[{type: String, required: false}] 
+    picture: [{ type: String, required: false }]
 });
 exports.default = mongoose_1.default.model('properties', exports.schema);

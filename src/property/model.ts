@@ -8,5 +8,5 @@ export interface IProperty{
     description?: String,
     //rating?: number,
     //coordinate?: [number,number],
-    //picture: [string]
+    picture?: [string]
 }

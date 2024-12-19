@@ -15,8 +15,8 @@ exports.endConn = endConn;
 const mongoose_1 = require("mongoose");
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        //await connect('mongodb://localhost:27017/InmoWorld')
-        yield (0, mongoose_1.connect)('mongodb://mongodb:27017/InmoWorld')
+        //await connect('mongodb://mongodb:27017/InmoWorld')
+        yield (0, mongoose_1.connect)('mongodb://localhost:27017/InmoWorld')
             .then(() => {
             console.log('Database connected!!');
         })

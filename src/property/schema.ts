@@ -8,7 +8,7 @@ export const schema = new Schema<IProperty>({
     description: {type: String, required: false},
     //rating: {type: Number, required: false},
     //coordinate: [{type: Number, required: false}],
-    //picture:[{type: String, required: false}] 
+    picture:[{type: String, required: false}] 
 })
 
 export default mongoose.model('properties',schema)

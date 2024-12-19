@@ -46,7 +46,7 @@ class propertyController {
                         //rating: 0,
                         description: req.body.description,
                         owner: req.body.owner,
-                        //picture:req.body.picture
+                        picture: req.body.picture,
                         //active: true
                     };
                     const activity_data = yield propertiesServices.getEntries.create(activity_params);
@@ -123,7 +123,7 @@ class propertyController {
                         //rating: req.body.rating,
                         description: req.body.description,
                         owner: req.body.owner,
-                        //picture: req.body.picture
+                        picture: req.body.picture,
                         //active: true
                     };
                     yield propertiesServices.getEntries.updateProperty(property_params, property_filter);
