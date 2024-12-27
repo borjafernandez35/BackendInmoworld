@@ -22,7 +22,7 @@ router.get('/:page/:limit',verifyToken, async(_req, res) => {
     return res.json(data);
 }) */
 
-router.post('/:id', verifyToken, async(req, res) => {
+router.post('/', verifyToken, async(req, res) => {
     property_controller.createProperty(req, res);
 })
 

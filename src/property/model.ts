@@ -1,8 +1,9 @@
 /* eslint-disable */
 import  { ObjectId } from "mongoose";
+import mongoose from 'mongoose';
 
 export interface IProperty{
-    //_id?: mongoose.Types.ObjectId;
+    _id?: mongoose.Types.ObjectId;
     owner: ObjectId,
     address: string,
     description?: String,
