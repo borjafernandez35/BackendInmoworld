@@ -45,18 +45,23 @@ class AuthController {
     signIn(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log('estoy en el sign in!!!!!!!!', req.body);
                 const { email, password } = req.body;
+                console.log('el correo es...', email);
+                console.log('el password es....', password);
                 // Verificar que se proporcionen email y password
                 if (!email || !password) {
                     return res.status(400).json({ message: 'Missing fields' });
                 }
                 // Buscar usuario por email
                 const user_data = yield userServices.getEntries.filterUserEmail(email);
+                console.log('el usuario ess........!!!!', user_data);
                 if (!user_data) {
                     return res.status(404).json({ message: 'User not found' });
                 }
                 // Verificar que el password sea válido
                 const isPasswordValid = yield userServices.getEntries.validatePassword(password.trim(), user_data.password.trim());
+                console.log('el paswword es valido......', isPasswordValid);
                 if (!isPasswordValid) {
                     return res.status(401).json({ message: 'Error, wrong email or password' });
                 }

@@ -2,13 +2,14 @@
 import  mongoose from "mongoose";
 
 export interface IProperty{
-    //_id?: mongoose.Types.ObjectId;
+    _id?: mongoose.Types.ObjectId;
     owner: mongoose.Types.ObjectId,
-    address: string,
+    //latitude?: number,
+    //longitude?:number,
     description?: String,
-    location?: IPoint; 
+    location?: IPoint,
+    price: number, 
     //rating?: number,
-    //coordinate?: [number,number],
     //picture: [string]
 }
 
