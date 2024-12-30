@@ -48,7 +48,7 @@ class propertyController {
                         price: req.body.price,
                         description: req.body.description,
                         owner: req.body.owner,
-                        //picture:req.body.picture
+                        imageUrl: req.body.imageUrl,
                         //active: true
                     };
                     console.log('LA PROPIEDAD EEEEESSSSSSSS EN CONTROLLER:', property_params);
@@ -173,7 +173,7 @@ class propertyController {
                         //rating: req.body.rating,
                         description: req.body.description,
                         owner: req.body.owner,
-                        //picture: req.body.picture
+                        imageUrl: req.body.imageUrl,
                         //active: true
                     };
                     yield propertiesServices.getEntries.updateProperty(property_params, property_filter);

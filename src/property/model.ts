@@ -8,7 +8,8 @@ export interface IProperty{
     //longitude?:number,
     description?: String,
     location?: IPoint,
-    price: number, 
+    price: number,
+    imageUrl?: String[],
     //rating?: number,
     //picture: [string]
 }
@@ -17,3 +18,5 @@ interface IPoint {
     type: 'Point';
     coordinates: [number, number]; // [longitude, latitude]
   }
+   
+

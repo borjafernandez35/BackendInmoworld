@@ -19,7 +19,7 @@ export class propertyController {
                     price: req.body.price,
                     description: req.body.description,
                     owner: req.body.owner,
-                    //picture:req.body.picture
+                    imageUrl:req.body.imageUrl,
                     //active: true
                 };
                 console.log('LA PROPIEDAD EEEEESSSSSSSS EN CONTROLLER:',property_params);
@@ -153,7 +153,7 @@ export class propertyController {
                     //rating: req.body.rating,
                     description: req.body.description,
                     owner: req.body.owner,
-                    //picture: req.body.picture
+                    imageUrl: req.body.imageUrl,
                     //active: true
                 };
                 await propertiesServices.getEntries.updateProperty(property_params, property_filter);
