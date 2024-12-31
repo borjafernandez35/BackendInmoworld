@@ -13,6 +13,11 @@ router.get('/:page/:limit/:distance/:sort',verifyToken, async(_req, res) => {
      await property_controller.getAll(_req, res);
 })
 
+router.get('/markers/:distance/:sort',verifyToken, async(_req, res) => {
+    console.log('ESTOOOYYYYYYYYY EN EL GGEEETTT ALLL MARKERS DE PROPERTIESSS!!!!!',_req.params.distance,_req.params.sort);
+     await property_controller.getAllMarkers(_req, res);
+})
+
 /* router.get('/:id', async(req, res) => {
     const data = await experienciasServices.getEntries.findById(req.params.id)
     return res.json(data);

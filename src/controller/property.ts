@@ -51,6 +51,39 @@ export class propertyController {
         }
     } */
 
+        public async getAllMarkers(req: Request, res: Response) {
+            try {
+                console.log("funciona get all");
+                const user_filter = { _id: req.userId};
+                const user_data = await userServices.getEntries.filterUser(user_filter);
+                if (!user_data) {
+                    return res.status(404).json({ message: 'Usuario no encontrado' });
+                }
+                const property_data = await propertiesServices.getEntries.getAll(user_data, parseInt(req.params.distance, 10));
+                console.log('PROPIEDADES!!!!!!!!!!!!',property_data);
+                if (!property_data) {
+                    return res.status(404).json({ message: 'propiedad no encontrada' });
+                }
+                let sortedProperties = property_data;
+                if (req.params.sort && req.params.sort.trim() !== '') {
+                        sortedProperties = propertiesServices.getEntries.sortProperties(
+                        property_data,
+                        req.params.sort
+                        );
+                    }
+                    console.log('las propiedades SON!!!!!!................:',sortedProperties);
+    
+            
+                console.log(sortedProperties);
+                return res.status(200).json({properties:sortedProperties});
+                
+            } catch (error) {
+                
+                console.error('Error en la solicitud:', error);
+                return res.status(500).json({ message: 'Error interno del servidor' });
+            }
+        }
+
     public async getAll(req: Request, res: Response) {
         try {
             console.log("funciona get all");
