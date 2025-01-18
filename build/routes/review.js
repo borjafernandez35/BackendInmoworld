@@ -27,10 +27,10 @@ router.get('/:id', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0
 router.post('/', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     review_controller.createReview(req, res);
 }));
-router.put('/:id', authJWT_1.verifyToken, authJWT_1.reviewOwner, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.put('/:id', authJWT_1.verifyToken, authJWT_1.reviewOwnerorAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     review_controller.updateReview(req, res);
 }));
-router.delete('/:id', authJWT_1.verifyToken, authJWT_1.reviewOwner || authJWT_1.AdminValidation, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.delete('/:id', authJWT_1.verifyToken, authJWT_1.reviewOwnerorAdmin, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     review_controller.deleteReview(req, res);
 }));
 exports.default = router;

@@ -10,7 +10,20 @@ const schema = new Schema<IUser>({
   password: { type: String, required: true },
   birthday:{type:Date,required:true},
   isAdmin: { type: Boolean, default: false },
-  property: [{ type: Schema.Types.ObjectId, ref: 'property', required:false }]
+  property: [{ type: Schema.Types.ObjectId, ref: 'properties', required:false }],
+  //comment: [{ type: Schema.Types.ObjectId, ref: 'reviews', required:false }],
+  location: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      required: false,
+      default: 'Point',
+    },
+    coordinates: {
+      type: [Number],
+      required: false,
+    },
+  }
 });
 
 

@@ -201,7 +201,8 @@ class userController {
                         name: req.body.name || user_data.name,
                         email: req.body.email || user_data.email,
                         password: req.body.password || user_data.password,
-                        birthday: req.body.birthday || user_data.birthday
+                        birthday: req.body.birthday || user_data.birthday,
+                        location: req.body.location || user_data.location,
                     };
                     yield userServices.getEntries.updateUser(user_params, { _id: req.params.id });
                     const new_user_data = yield userServices.getEntries.findById(req.params.id);

@@ -16,6 +16,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const user_1 = require("../controller/user");
 const authJWT_1 = require("../middlewares/authJWT");
+const chatController_1 = require("../controller/chatController");
 /* eslint-disable */
 //import toNewUser from '../extras/utils'
 const router = express_1.default.Router();
@@ -23,4 +24,8 @@ const user_controller = new user_1.userController();
 router.get('/:id', authJWT_1.verifyToken, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     user_controller.chatStartup(req, res);
 }));
+// Ruta para contar mensajes no leídos
+router.get('/unread/:id', authJWT_1.verifyToken, chatController_1.countUnreadMessages);
+// Ruta para marcar mensajes como leídos
+router.post('/mark-as-read', authJWT_1.verifyToken, chatController_1.markMessagesAsRead);
 exports.default = router;

@@ -15,7 +15,11 @@ export class AuthController {
 
   public async signIn(req: Request, res: Response): Promise<Response> {
     try {
+      console.log('estoy en el sign in!!!!!!!!',req.body);
       const { email, password } = req.body;
+
+      console.log('el correo es...',email);
+      console.log('el password es....',password);
 
       // Verificar que se proporcionen email y password
       if (!email || !password) {
@@ -24,12 +28,15 @@ export class AuthController {
 
       // Buscar usuario por email
       const user_data = await userServices.getEntries.filterUserEmail(email);
+
+      console.log('el usuario ess........!!!!',user_data);
       if (!user_data) {
         return res.status(404).json({ message: 'User not found' });
       }
 
       // Verificar que el password sea válido
       const isPasswordValid = await userServices.getEntries.validatePassword(password.trim(), user_data.password.trim());
+      console.log('el paswword es valido......',isPasswordValid);
       if (!isPasswordValid) {
         return res.status(401).json({ message: 'Error, wrong email or password' });
       }

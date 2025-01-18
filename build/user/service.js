@@ -104,7 +104,7 @@ exports.getEntries = {
             console.log("que hay aqui", query);
             const activeQuery = Object.assign(Object.assign({}, query), { active: true });
             console.log("activeeeeee", activeQuery);
-            return yield schema_1.default.findOne(activeQuery);
+            return yield schema_1.default.findById(activeQuery);
         }
         catch (error) {
             throw error;

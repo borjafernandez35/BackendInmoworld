@@ -27,11 +27,25 @@ exports.schema = void 0;
 /* eslint-disable */
 const mongoose_1 = __importStar(require("mongoose"));
 exports.schema = new mongoose_1.Schema({
-    owner: { type: mongoose_1.Schema.Types.ObjectId, ref: 'user' },
-    address: { type: String, required: false },
+    owner: { type: mongoose_1.Schema.Types.ObjectId, ref: 'user', required: true },
+    price: { type: Number, required: true },
     description: { type: String, required: false },
+    imageUrl: [{ type: String, required: false }],
+    location: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: false,
+            default: 'Point',
+        },
+        coordinates: {
+            type: [Number],
+            required: false,
+        }
+    },
     //rating: {type: Number, required: false},
     //coordinate: [{type: Number, required: false}],
-    //picture:[{type: String, required: false}] 
 });
+// Index for geospatial queries
+exports.schema.index({ location: '2dsphere' });
 exports.default = mongoose_1.default.model('properties', exports.schema);

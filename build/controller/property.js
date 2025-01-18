@@ -34,24 +34,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.propertyController = void 0;
 const propertiesServices = __importStar(require("../property/service"));
+const userServices = __importStar(require("../user/service"));
 //import * as usersServices from '../user/service';
 class propertyController {
     createProperty(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log('CREATEEEEEEEEEE PROPERTYYYYYYYYY!!!!!!', req.body);
             try {
                 // this check whether all the filds were send through the request or not
-                if (req.body.address && req.body.description && req.body.owner) {
-                    const activity_params = {
-                        address: req.body.address,
-                        //rating: 0,
+                if (req.body.owner && req.body.price && req.body.description && req.body.location) {
+                    const property_params = {
+                        location: req.body.location,
+                        price: req.body.price,
                         description: req.body.description,
                         owner: req.body.owner,
-                        //picture:req.body.picture
+                        imageUrl: req.body.imageUrl,
                         //active: true
                     };
-                    const activity_data = yield propertiesServices.getEntries.create(activity_params);
-                    yield propertiesServices.getEntries.addPropertyToUser(req.body.owner, activity_data._id);
-                    return res.status(201).json({ message: 'Activity created successfully', activity: activity_data });
+                    console.log('LA PROPIEDAD EEEEESSSSSSSS EN CONTROLLER:', property_params);
+                    const property_data = yield propertiesServices.getEntries.create(property_params);
+                    console.log('los datos de la propiedad son......................', property_data);
+                    yield propertiesServices.getEntries.addPropertyToUser(req.body.owner, property_data._id);
+                    return res.status(201).json({ message: 'Property created successfully', property: property_data });
                 }
                 else {
                     return res.status(400).json({ error: 'Missing fields' });
@@ -81,15 +85,59 @@ class propertyController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 console.log("funciona get all");
-                //const activity_filter = {};
-                const property_data = yield propertiesServices.getEntries.getAll();
+                const user_filter = { _id: req.userId };
+                const user_data = yield userServices.getEntries.filterUser(user_filter);
+                if (!user_data) {
+                    return res.status(404).json({ message: 'Usuario no encontrado' });
+                }
+                const property_data = yield propertiesServices.getEntries.getAll(user_data, parseInt(req.params.distance, 10));
+                console.log('PROPIEDADES!!!!!!!!!!!!', property_data);
+                if (!property_data) {
+                    return res.status(404).json({ message: 'propiedad no encontrada' });
+                }
+                let sortedProperties = property_data;
+                if (req.params.sort && req.params.sort.trim() !== '') {
+                    sortedProperties = propertiesServices.getEntries.sortProperties(property_data, req.params.sort);
+                }
+                console.log('las propiedades SON!!!!!!................:', sortedProperties);
+                // Paginación
+                const total = sortedProperties.length;
+                const page = Number(req.params.page); // Convertir a número
+                const limit = Number(req.params.limit); // Convertir a número
+                const startIndex = (page - 1) * limit;
+                const endIndex = page * limit;
+                let totalPages = Math.ceil(total / limit);
+                const resultProperty = sortedProperties.slice(startIndex, endIndex);
+                console.log(resultProperty, totalPages, total);
+                return res.status(200).json({ properties: resultProperty, totalPages: totalPages, totalActivity: total });
+            }
+            catch (error) {
+                console.error('Error en la solicitud:', error);
+                return res.status(500).json({ message: 'Error interno del servidor' });
+            }
+        });
+    }
+    getByName(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log("funciona get by name");
+                const user_filter = { _id: req.userId };
+                const user_data = yield userServices.getEntries.filterUser(user_filter);
+                if (!user_data) {
+                    return res.status(404).json({ message: 'Usuario no encontrado' });
+                }
+                const property_data = yield propertiesServices.getEntries.getByName(user_data, parseInt(req.params.distance, 10), req.params.search);
+                if (!property_data || property_data.length === 0) {
+                    // Si no hay propiedades, retorna una respuesta vacía
+                    return res.status(200).json({ properties: [], totalPages: 0, totalActivity: 0 });
+                }
                 let total = property_data.length;
                 const page = Number(req.params.page); // Convertir a número
                 const limit = Number(req.params.limit); // Convertir a número
                 const startIndex = (page - 1) * limit;
                 const endIndex = page * limit;
                 let totalPages = Math.ceil(total / limit);
-                const resultProperty = property_data.slice(startIndex, endIndex);
+                const resultProperty = property_data === null || property_data === void 0 ? void 0 : property_data.slice(startIndex, endIndex);
                 console.log(resultProperty, totalPages, total);
                 return res.status(200).json({ properties: resultProperty, totalPages: totalPages, totalActivity: total });
             }
@@ -116,14 +164,16 @@ class propertyController {
                     const activity_data = yield propertiesServices.getEntries.filterProperty(property_filter);
                     if (!activity_data) {
                         // Send failure response if user not found
-                        return res.status(400).json({ error: 'Activity not found' });
+                        return res.status(400).json({ error: 'Property not found' });
                     }
                     const property_params = {
-                        address: req.body.address,
+                        price: req.body.price,
+                        //longitude:req.body.longitude,
+                        //latitude:req.body.latitude,
                         //rating: req.body.rating,
                         description: req.body.description,
                         owner: req.body.owner,
-                        //picture: req.body.picture
+                        imageUrl: req.body.imageUrl,
                         //active: true
                     };
                     yield propertiesServices.getEntries.updateProperty(property_params, property_filter);

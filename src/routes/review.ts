@@ -1,7 +1,7 @@
 /* eslint-disable */
 import express from 'express'
 import { reviewController } from '../controller/review'
-import {verifyToken,reviewOwner,AdminValidation} from '../middlewares/authJWT'
+import {verifyToken, reviewOwnerorAdmin} from '../middlewares/authJWT'
 
 const router = express.Router()
 const review_controller: reviewController = new reviewController();
@@ -18,11 +18,11 @@ router.post('/',verifyToken, async(req, res) => {
     review_controller.createReview(req, res);
 })
 
-router.put('/:id',verifyToken,reviewOwner, async (req, res) => {
+router.put('/:id',verifyToken,reviewOwnerorAdmin, async (req, res) => {
     review_controller.updateReview(req, res);
 })
 
-router.delete('/:id',verifyToken,reviewOwner||AdminValidation, async(req, res) => {
+router.delete('/:id',verifyToken,reviewOwnerorAdmin, async(req, res) => {
     review_controller.deleteReview(req, res);
 })
 

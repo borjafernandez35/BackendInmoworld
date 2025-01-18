@@ -67,12 +67,12 @@ export const getEntries = {
           throw error;
         }
       },
-    filterUser: async(query: any): Promise<IUser | null>=> {
+    filterUser: async(query: any): Promise<IUser | null >=> {
         try {
           console.log("que hay aqui",query);
           const activeQuery = { ...query, active: true };
           console.log("activeeeeee",activeQuery);
-          return await user.findOne(activeQuery);
+          return await user.findById(activeQuery);
         } catch (error) {
           throw error;
         }

@@ -29,6 +29,7 @@ const chatSchema = new mongoose_1.Schema({
     receiver: { type: mongoose_1.Schema.Types.ObjectId, ref: 'user', required: true },
     sender: { type: mongoose_1.Schema.Types.ObjectId, ref: 'user', required: true },
     message: { type: String, required: true },
-    date: { type: Date, default: Date.now }
+    date: { type: Date, default: Date.now },
+    read: { type: Boolean, default: false }
 });
 exports.default = mongoose_1.default.model('chat', chatSchema);

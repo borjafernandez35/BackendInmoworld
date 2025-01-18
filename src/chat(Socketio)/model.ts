@@ -6,4 +6,5 @@ export interface IChat  extends Document {
     sender: mongoose.Types.ObjectId;
     message: string;
     date: Date;
+    read: Boolean;
   }

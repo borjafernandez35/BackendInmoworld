@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { ObjectId} from "mongoose"
+import mongoose from "mongoose"
 
 
 export interface IReview {
-    user: ObjectId,
-    property: ObjectId,
+    user: mongoose.Types.ObjectId,
+    property: mongoose.Types.ObjectId,
     date: Date,
     description: string
 }

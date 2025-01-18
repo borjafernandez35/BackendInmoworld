@@ -10,7 +10,13 @@ export interface IUser {
     birthday: Date;
     password: string;
     //avatar?:string,
-    //comment: string,
+    //comment: mongoose.Types:ObjectId,
     isAdmin?: boolean; 
    property?: mongoose.Types.ObjectId[];
+   location?: IPoint;
 }
+
+interface IPoint {
+    type: 'Point';
+    coordinates: [number, number]; // [longitude, latitude]
+  }

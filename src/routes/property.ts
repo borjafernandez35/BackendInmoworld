@@ -1,15 +1,21 @@
 /* eslint-disable */
 import express from 'express';
 import {propertyController} from '../controller/property';
-import {verifyToken,isOwner,AdminValidation} from '../middlewares/authJWT'
+import {verifyToken, isOwnerorAdmin} from '../middlewares/authJWT'
 
 
 
 const router = express.Router()
 const property_controller: propertyController = new propertyController();
 
-router.get('/:page/:limit',verifyToken, async(_req, res) => {
+router.get('/:page/:limit/:distance/:sort',verifyToken, async(_req, res) => {
+    console.log('ESTOOOYYYYYYYYY EN EL GGEEETTT ALLL DE PROPERTIESSS!!!!!',_req.params.distance,_req.params.sort);
      await property_controller.getAll(_req, res);
+})
+
+router.get('/markers/:distance/:sort',verifyToken, async(_req, res) => {
+    console.log('ESTOOOYYYYYYYYY EN EL GGEEETTT ALLL MARKERS DE PROPERTIESSS!!!!!',_req.params.distance,_req.params.sort);
+     await property_controller.getAllMarkers(_req, res);
 })
 
 /* router.get('/:id', async(req, res) => {
@@ -22,7 +28,8 @@ router.get('/:page/:limit',verifyToken, async(_req, res) => {
     return res.json(data);
 }) */
 
-router.post('/:id', verifyToken, async(req, res) => {
+router.post('/new', verifyToken,async(req, res) => {
+    console.log('VAMOOOSSSSSS A CREAR UN PORPIEDDAAAADDDDD!!!');
     property_controller.createProperty(req, res);
 })
 
@@ -31,13 +38,20 @@ router.post('/:id', verifyToken, async(req, res) => {
     return res.json(data);
 }) */
 
-router.put('/:id',verifyToken,isOwner, async(req, res) => {
+router.put('/:id',verifyToken,isOwnerorAdmin, async(req, res) => {
+    console.log('ESTOY EN ACTUALIZAR LAS PROPIEDADES!!!!!!!!!!!!');
     property_controller.updateProperty(req, res);
 })
 
-router.delete('/:id',verifyToken,AdminValidation||isOwner, async(req, res) => {
+router.delete('/:id',verifyToken,isOwnerorAdmin, async(req, res) => {
+    console.log('VOY A BORRAR UNA PROPIEDAD!!!!!');
     property_controller.deleteProperty(req, res);
 })
+
+router.get('/by/name/:page/:limit/:id/:distance/:search', verifyToken,(req, res) => {
+    console.log('ESTOY REOCGIENDO LAS PROPIEDAAAADDEEESSSS PARA EL MAPAAAAAA!!!!');
+   property_controller.getByName(req, res);
+  })
 
 /* router.delete('/delParticipant/:idExp/:idPart', async(req, res) => {
     const data = await experienciasServices.getEntries.delParticipant(req.params.idExp,req.params.idPart)
