@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Server } from 'socket.io';
 import ChatSchema from './schema';
-
+import mongoose from 'mongoose';
 // Mapa para asociar userId con socket.id
 const userSocketMap: Map<string, string> = new Map();
 
@@ -50,12 +50,17 @@ const socketService = (io: Server) => {
                     console.log(`Mensaje enviado a usuario ${receiver} con socket.id ${receiverSocketId}`);
                     
                     // Emitir notificación de nuevo mensaje
-                    io.to(parsedData.receiverId).emit('new-message', {
+                    io.to(receiverSocketId).emit('new-message', {
                         sender: parsedData.sender,
                         message: parsedData.message,
                     });
                 } else {
                     console.log(`Usuario ${receiver} no está conectado ${receiverSocketId}`);
+                    const unreadCount = await ChatSchema.countDocuments({
+                        receiver: parsedData.receiverId,
+                        read: false,
+                    });
+                    socket.emit('unread-count-response', { unreadCount });
                 }
             } catch (error) {
                 console.error('Error procesando el mensaje:', error);
@@ -75,6 +80,41 @@ const socketService = (io: Server) => {
             socket.emit('error', { message: 'Error al cargar mensajes' });
             }
         });
+
+        // Ultimo mensaje
+        socket.on('last-message', async (userId) => {
+            try {
+                console.log('userId: ', userId);
+                console.log('llega la llamada a last-message');
+                // Usamos una agregación en MongoDB para obtener el último mensaje de cada remitente
+                const messages = await ChatSchema.aggregate([
+                { $match: { receiver: new mongoose.Types.ObjectId(userId) } }, // Convertir userId a ObjectId
+                { $sort: { date: -1 } }, // Ordenar por la fecha del mensaje (más reciente primero)
+                { 
+                    $group: { 
+                    _id: "$sender", // Agrupar por el campo 'sender'
+                    lastMessage: { $first: "$$ROOT" } // Obtener el mensaje más reciente del grupo
+                    }
+                },
+                { 
+                    $project: { 
+                    _id: 0,
+                    sender: "$_id",
+                    message: "$lastMessage.message",
+                    timestamp: "$lastMessage.date" // Asegúrate de usar 'date' en lugar de 'timestamp'
+                    }
+                }
+                ]);
+             
+                // Emitimos los mensajes al cliente
+                console.log('last message list: ', messages)
+                socket.emit('last-message-response', messages);
+            } catch (error) {
+                console.error('Error al cargar el último mensaje: ', error);
+                socket.emit('error', { message: 'Error al cargar el último mensaje' });
+            }
+        });
+        
 
         // Manejar desconexión
         socket.on('disconnect', () => {
