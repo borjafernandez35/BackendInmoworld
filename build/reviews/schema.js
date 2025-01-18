@@ -30,6 +30,7 @@ exports.schema = new mongoose_1.Schema({
     user: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: 'user' },
     property: { type: mongoose_1.Schema.Types.ObjectId, required: true, ref: 'property' },
     date: { type: Date, default: Date.now, required: true },
+    rating: { type: Number, required: true },
     description: { type: String, required: true }
 });
 exports.default = mongoose_1.default.model('reviews', exports.schema);

@@ -39,10 +39,11 @@ class reviewController {
     createReview(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (req.body.user && req.body.property && req.body.description) {
+                if (req.body.user && req.body.property && req.body.rating && req.body.description) {
                     const review_params = {
                         user: req.body.user,
                         property: req.body.property,
+                        rating: req.body.rating,
                         description: req.body.description,
                         date: new Date()
                     };
@@ -58,22 +59,18 @@ class reviewController {
             }
         });
     }
-    getAll(req, res) {
+    getAll(_req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const review_data = yield reviewServices.getEntries.getAll();
-                const total = review_data.length;
-                const page = Number(req.params.page);
-                const limit = Number(req.params.limit);
-                const startIndex = (page - 1) * limit;
-                const endIndex = page * limit;
-                const totalPages = Math.ceil(total / limit);
-                const resultReview = review_data.slice(startIndex, endIndex);
+                // Mostrar las reviews en la consola
+                console.log('Reviews obtenidas:', review_data);
                 return res
                     .status(200)
-                    .json({ reviews: resultReview, totalPages: totalPages, totalReview: total });
+                    .json({ reviews: review_data, totalReview: review_data.length });
             }
             catch (error) {
+                console.error('Error al extraer las reviews:', error);
                 return res.status(500).json({ error: 'Error al extraer todas las reviews' });
             }
         });
@@ -109,6 +106,7 @@ class reviewController {
                     const review_params = {
                         user: req.body.name || review_data.user,
                         property: req.body.property || review_data.property,
+                        rating: req.body.rating || review_data.rating,
                         description: req.body.description || review_data.description,
                         date: new Date()
                     };

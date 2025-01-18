@@ -27,7 +27,7 @@ app.get('/ping', (_req, res) => {
 
 app.use('/user', userRouter);
 app.use('/property', propertyRouter);
-app.use('/review', reviewRouter);
+app.use('/reviews', reviewRouter);
 app.use('/auth', authRouter);
 app.use('/chats', chatRouter);
 
