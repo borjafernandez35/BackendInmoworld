@@ -26,7 +26,7 @@ app.get('/ping', (_req, res) => {
 });
 app.use('/user', user_1.default);
 app.use('/property', property_1.default);
-app.use('/review', review_1.default);
+app.use('/reviews', review_1.default);
 app.use('/auth', auth_1.default);
 app.use('/chats', chats_1.default);
 const server = app.listen(PORT, () => {

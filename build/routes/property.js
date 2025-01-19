@@ -22,6 +22,10 @@ router.get('/:page/:limit/:distance/:sort', authJWT_1.verifyToken, (_req, res) =
     console.log('ESTOOOYYYYYYYYY EN EL GGEEETTT ALLL DE PROPERTIESSS!!!!!', _req.params.distance, _req.params.sort);
     yield property_controller.getAll(_req, res);
 }));
+router.get('/markers/:distance/:sort', authJWT_1.verifyToken, (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log('ESTOOOYYYYYYYYY EN EL GGEEETTT ALLL MARKERS DE PROPERTIESSS!!!!!', _req.params.distance, _req.params.sort);
+    yield property_controller.getAllMarkers(_req, res);
+}));
 /* router.get('/:id', async(req, res) => {
     const data = await experienciasServices.getEntries.findById(req.params.id)
     return res.json(data);

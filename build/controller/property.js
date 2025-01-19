@@ -81,6 +81,34 @@ class propertyController {
             return res.status(500).json({ error: 'Internal server error' });
         }
     } */
+    getAllMarkers(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                console.log("funciona get all");
+                const user_filter = { _id: req.userId };
+                const user_data = yield userServices.getEntries.filterUser(user_filter);
+                if (!user_data) {
+                    return res.status(404).json({ message: 'Usuario no encontrado' });
+                }
+                const property_data = yield propertiesServices.getEntries.getAll(user_data, parseInt(req.params.distance, 10));
+                console.log('PROPIEDADES!!!!!!!!!!!!', property_data);
+                if (!property_data) {
+                    return res.status(404).json({ message: 'propiedad no encontrada' });
+                }
+                let sortedProperties = property_data;
+                if (req.params.sort && req.params.sort.trim() !== '') {
+                    sortedProperties = propertiesServices.getEntries.sortProperties(property_data, req.params.sort);
+                }
+                console.log('las propiedades SON!!!!!!................:', sortedProperties);
+                console.log(sortedProperties);
+                return res.status(200).json({ properties: sortedProperties });
+            }
+            catch (error) {
+                console.error('Error en la solicitud:', error);
+                return res.status(500).json({ message: 'Error interno del servidor' });
+            }
+        });
+    }
     getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
