@@ -71,7 +71,8 @@ export class userController {
         req.body.name &&
         req.body.email &&
         req.body.password &&
-        req.body.birthday
+        req.body.birthday &&
+        req.body.imageUser
         
       ) {
 
@@ -87,7 +88,8 @@ export class userController {
           email: req.body.email,
           birthday: req.body.birthday,
           isAdmin: false,
-          password: password
+          password: password,
+          imageUser: req.body.imageUser
         };
         const user_data = await userServices.getEntries.createUserGoogle(user_params);
         const email = req.body.email;
@@ -141,7 +143,7 @@ export class userController {
 
 public async register(req: Request, res: Response) {
   try {
-    console.log("REGiiisssSTERRRRRRR:",req.body.name,req.body.email,req.body.password,req.body.isAdmin, req.body.birthday)
+    console.log("REGiiisssSTERRRRRRR:",req.body.name,req.body.email,req.body.password,req.body.isAdmin, req.body.birthday, req.body.imageUser)
       if (req.body.name && req.body.email && req.body.password && req.body.birthday) {
 
         console.log("estoy en register!!!!:",req.body.name);
@@ -161,7 +163,8 @@ public async register(req: Request, res: Response) {
               email: req.body.email,
               password:password,  // Guarda la contraseña en texto claro y deja que el middleware la cifre
               isAdmin:req.body.isAdmin,
-              birthday:req.body.birthday
+              birthday:req.body.birthday,
+              imageUser: req.body.imageUser
           };
 
           const user_data = await userServices.getEntries.create(user_params);
@@ -177,36 +180,39 @@ public async register(req: Request, res: Response) {
 }
 
 
+public async updateUser(req: Request, res: Response) {
+  try {
+    const { id } = req.params;
 
-
-  public async updateUser(req: Request, res: Response) {
-    try {
-      if (req.params.id) {
-        const user_data = await userServices.getEntries.findById(req.params.id);
-        if (!user_data) {
-          return res.status(404).json({ error: 'User not found' });
-        }
-
-        const user_params: IUser = {
-          name: req.body.name || user_data.name,
-          email: req.body.email || user_data.email,
-          password: req.body.password || user_data.password,
-          birthday:req.body.birthday || user_data.birthday,
-          location: req.body.location || user_data.location,
-        };
-
-        await userServices.getEntries.updateUser(user_params, { _id: req.params.id });
-        const new_user_data = await userServices.getEntries.findById(req.params.id);
-        return res.status(200).json({ data: new_user_data, message: 'Successful update' });
-      } else {
-        return res.status(400).json({ error: 'Missing ID parameter' });
-      }
-    } catch (error) {
-      console.error('Error updating:', error);
-      return res.status(500).json({ error: 'Internal server error' });
+    if (!id) {
+      return res.status(400).json({ error: 'Missing ID parameter' });
     }
-  }
 
+    const existingUser = await userServices.getEntries.findById(id);
+    if (!existingUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const updates = Object.fromEntries(
+      Object.entries(req.body).filter(([_, value]) => value !== undefined)
+    );
+
+    if (updates.password && typeof updates.password === 'string') {
+      updates.password = await userServices.getEntries.encryptPassword(updates.password);
+    } else if (updates.password) {
+      return res.status(400).json({ error: 'Invalid password format' });
+    }
+
+    await userServices.getEntries.update(id, updates);
+
+    const updatedUser = await userServices.getEntries.findById(id);
+
+    return res.status(200).json({ data: updatedUser, message: 'User updated successfully' });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
   public async deleteUser(req: Request, res: Response) {
     try {
       const userId = req.params.id;
@@ -238,4 +244,29 @@ public async register(req: Request, res: Response) {
       return res.status(500).json({ error })
     }
   }
+
+  public async updateProfileImage(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { imageUser } = req.body;
+  
+      if (!id || !imageUser) {
+        return res.status(400).json({ error: 'Missing ID or imageUser field' });
+      }
+  
+      // Llamar al servicio para actualizar solo la imagen de perfil
+      const updatedUser = await userServices.getEntries.updateProfileImage(id, imageUser);
+  
+      if (!updatedUser) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      return res.status(200).json({ message: 'Profile image updated successfully', user: updatedUser });
+    } catch (error) {
+      console.error('Error updating profile image:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+  
+
 }
