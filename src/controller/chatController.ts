@@ -1,3 +1,4 @@
+/* eslint-disable*/
 import { Request, Response } from 'express';
 import ChatSchema from '../chat(Socketio)/schema';
 
