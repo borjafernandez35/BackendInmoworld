@@ -60,6 +60,7 @@ export const getEntries = {
         console.log(body);
         return await user.findByIdAndUpdate(id,body,{$new:true});
     },
+
     updateUser: async(user_params: IUser, user_filter: any): Promise<void> =>{
         try {
           await user.findOneAndUpdate(user_filter, user_params);
@@ -67,6 +68,7 @@ export const getEntries = {
           throw error;
         }
       },
+      
     filterUser: async(query: any): Promise<IUser | null >=> {
         try {
           console.log("que hay aqui",query);
@@ -121,5 +123,19 @@ export const getEntries = {
     },
     delProperty: async(idUser:string,idExp:string)=>{
         return await user.findByIdAndUpdate(idUser,{$pull:{property:idExp}});
+    },
+    updateProfileImage: async (userId: string, imageUrl: string): Promise<IUser | null> => {
+      try {
+        // Actualiza solo el campo 'imageUser' en la base de datos
+        const updatedUser = await user.findByIdAndUpdate(
+          userId,
+          { imageUser: imageUrl },
+          { new: true } // Retorna el documento actualizado
+        );
+        return updatedUser; // Devuelve el usuario actualizado
+      } catch (error) {
+        console.error('Error al actualizar la imagen de perfil:', error);
+        throw error;
+      }
     }
 }

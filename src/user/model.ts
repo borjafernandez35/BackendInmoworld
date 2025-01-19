@@ -1,8 +1,6 @@
 /* eslint-disable */
 import mongoose from 'mongoose';
 
-
-
 export interface IUser {
     _id?: mongoose.Types.ObjectId;
     name: string;
@@ -14,6 +12,7 @@ export interface IUser {
     isAdmin?: boolean; 
    property?: mongoose.Types.ObjectId[];
    location?: IPoint;
+   imageUser?: String[],
 }
 
 interface IPoint {

@@ -11,6 +11,7 @@ const schema = new Schema<IUser>({
   birthday:{type:Date,required:true},
   isAdmin: { type: Boolean, default: false },
   property: [{ type: Schema.Types.ObjectId, ref: 'properties', required:false }],
+  imageUser:[{type: String, required: false}],
   //comment: [{ type: Schema.Types.ObjectId, ref: 'reviews', required:false }],
   location: {
     type: {
